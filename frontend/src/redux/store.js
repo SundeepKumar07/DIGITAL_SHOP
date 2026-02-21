@@ -2,12 +2,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './slices/userSlice';
 import sellerReducer from './slices/sellerSlice';
+import productReducer from './slices/productSlice';
 
 const store = configureStore({
   reducer: {
     user: userReducer,
-    seller: sellerReducer
-    // Add other reducers here as your app grows
+    seller: sellerReducer,
+    product: productReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

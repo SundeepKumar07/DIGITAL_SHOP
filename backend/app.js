@@ -6,6 +6,7 @@ import userRouter from "./controller/user.js";
 import ErrorHandlerMiddleware from './middleware/error.js'
 import connectDB from "./db/db.js";
 import shopRouter from "./controller/shop.js";
+import productRouter from "./controller/product.js";
 // import fileUpload from "express-fileupload";
 
 const app = express();
@@ -33,6 +34,7 @@ connectDB();
 //request apis
 app.use('/api/v2/user', userRouter)
 app.use('/api/v2/shop', shopRouter)
+app.use('/api/v2/product', productRouter)
 
 //errorHandler
 app.use(ErrorHandlerMiddleware);
