@@ -157,4 +157,21 @@ shopRouter.get('/getseller', isSellerAuthenticated, catchAsyncError(async (req, 
     }
 }))
 
+//logout seller
+shopRouter.get('/logout-shop', isSellerAuthenticated, catchAsyncError(async (req, res, next) => {
+    try {
+        res.cookie('seller_token', null, {
+            expires: new Date(Date.now()),
+            httpOnly: true,
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Log out successfully"
+        })
+    } catch (err) {
+        return next(new ErrorHandler(err.message, 400));
+    }
+}))
+
 export default shopRouter;

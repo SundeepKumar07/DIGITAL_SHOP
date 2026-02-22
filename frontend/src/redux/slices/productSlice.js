@@ -2,16 +2,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    isLoading: false,
-    success: false,
-    product: null,
-    error: null,
+  isLoading: false,
+  success: false,
+  product: null,
+  error: null,
 };
 
 const productSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {
+    //======================== Create Product ===================
     productCreateRequest: (state) => {
       state.isLoading = true;
     },
@@ -25,6 +26,55 @@ const productSlice = createSlice({
       state.error = action.payload;
       state.success = false;
     },
+
+    //=========================== get all products of shop =========================
+    getAllProductsShopRequest: (state) => {
+      state.isLoading = true;
+    },
+    getAllProductsShopSuccess: (state, action) => {
+      state.isLoading = false;
+      state.products = action.payload;
+      state.getProductsSuccess = true;
+    },
+    getAllProductsShopFailed: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.getProductsSuccess = false;
+    },
+
+    //======================== delete a product ======================
+    // Redux slice improvements
+    deleteProductRequest: (state) => {
+      state.deleteLoading = true;
+      state.deleteProSuccess = false;
+      state.deleteError = null; // clear previous error
+    },
+
+    deleteProductSuccess: (state, action) => {
+      state.deleteLoading = false;
+      state.deleteProSuccess = true;
+
+      // Remove the deleted product from the products array immediately
+      state.products = state.products.filter(
+        (product) => product._id !== action.payload
+      );
+
+      state.deleteError = null; // clear error just in case
+    },
+
+    deleteProductFailed: (state, action) => {
+      state.deleteLoading = false;
+      state.deleteProSuccess = false;
+      state.deleteError = action.payload; // store error message
+    },
+
+    clearDeleteState: (state) => {
+      state.deleteLoading = false;
+      state.deleteProSuccess = false;
+      state.deleteError = null;
+    },
+
+    //========================= clear error and succes ===================s
     clearProductErrors: (state) => {
       state.error = null;
     },
@@ -35,11 +85,18 @@ const productSlice = createSlice({
 });
 
 export const {
-    productCreateFail,
-    productCreateRequest,
-    productCreateSuccess,
-    clearProductErrors,
-    clearProductSuccess
+  productCreateFail,
+  productCreateRequest,
+  productCreateSuccess,
+  getAllProductsShopFailed,
+  getAllProductsShopRequest,
+  getAllProductsShopSuccess,
+  deleteProductFailed,
+  deleteProductRequest,
+  deleteProductSuccess,
+  clearDeleteState,
+  clearProductErrors,
+  clearProductSuccess,
 } = productSlice.actions;
 
 export default productSlice.reducer;

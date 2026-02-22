@@ -12,7 +12,6 @@ const CreateProduct = () => {
   const { seller } = useSelector((state) => state.seller);
   const { isLoading, success, error, product } = useSelector((state) => state.product);
   const fileInputRef = useRef(null);
-  console.log(product);
   const [form, setForm] = useState({
     images: [],
     name: "",
@@ -107,9 +106,8 @@ const CreateProduct = () => {
       toast.error(error);
     }
     if(success){
-      toast.success("Product created successfully");
       dispatch(clearProductSuccess());
-      navigate("/shop-dashboard");
+      toast.success("Product created successfully");
     }
   }, [dispatch, error, success]);
 

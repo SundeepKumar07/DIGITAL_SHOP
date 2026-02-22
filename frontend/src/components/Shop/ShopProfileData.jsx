@@ -8,8 +8,8 @@ const ShopProfileData = ({ isOwner }) => {
   const [active, setActive] = useState(1);
   return (
     <div className='w-full'>
-      <div className="flex w-full justify-between">
-        <div className='flex w-full px-2 gap-2'>
+      <div className="flex flex-col sm:flex-row  w-full justify-between border-b-2 pb-2">
+        <div className='flex w-full px-2 gap-2 flex-wrap mb-2 md:mb-0'>
           <div className="flex items-center pr-[20px]">
             <h5 onClick={() => setActive(1)} className={`font-[600] text-[20px] ${active == 1 ? 'text-red-500' : 'text-[#000000a6]'} cursor-pointer`}>
               Shop Products

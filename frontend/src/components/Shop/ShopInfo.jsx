@@ -1,12 +1,24 @@
 import { useSelector } from 'react-redux'
-import { BACKEND_URL } from '../../../server';
+import { BACKEND_URL, server } from '../../../server';
 import styles from '../../styles/styles';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ShopInfo = ({ isOwner }) => {
     const { sellerLoading, seller } = useSelector(state => state.seller);
-    const logOutHandler = () => {
+    const navigate = useNavigate();
 
+    const logoutHandler = () => {
+        axios.get(`${server}/shop/logout-shop`, { withCredentials: true }).then((res) => {
+            toast.success(res.data.message)
+            navigate('/login-shop');
+            window.location.reload(true);
+        }).catch((err) => {
+            console.log(err.response.data.message);
+        })
     }
+
     return (
         <div>
             <div className='w-full py-5'>
@@ -36,7 +48,7 @@ const ShopInfo = ({ isOwner }) => {
             </div>
             <div className="p-3">
                 <h5 className='font-[600]'>Shop Ratings</h5>
-                <h4 className='text-[#000000a6'>{4/5}</h4>
+                <h4 className='text-[#000000a6'>{4 / 5}</h4>
             </div>
             <div className="p-3">
                 <h5 className='font-[600]'>Joined On</h5>
@@ -45,7 +57,7 @@ const ShopInfo = ({ isOwner }) => {
             {isOwner && (
                 <div className="py-3 px-4">
                     <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}>Edit Shop</div>
-                    <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`} onClick={logOutHandler}>Log Out</div>
+                    <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`} onClick={logoutHandler}>Log Out</div>
                 </div>
             )}
         </div>

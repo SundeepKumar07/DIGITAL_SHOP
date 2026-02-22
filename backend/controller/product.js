@@ -4,6 +4,7 @@ import catchAsyncError from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import Product from "../model/product.js";
 import Shop from "../model/shop.js";
+import { isSellerAuthenticated } from "../middleware/auth.js";
 
 const productRouter = express.Router();
 
@@ -23,7 +24,7 @@ productRouter.post(
       if (!shop) {
         return next(new ErrorHandler("Shop not found", 404));
       }
-      const existingProduct = await Product.findOne({name});
+      const existingProduct = await Product.findOne({ name });
       if (existingProduct) {
         return next(new ErrorHandler("Product Already Exist", 400));
       }
@@ -51,6 +52,44 @@ productRouter.post(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
+  })
+);
+
+//getting all product of a shop
+productRouter.get(
+  "/get-all-products-shop/:id",
+  catchAsyncError(async (req, res) => {
+    const products = await Product.find({ shopId: req.params.id });
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  })
+);
+
+//deleting a single product
+productRouter.delete(
+  "/delete-shop-product/:id",
+  isSellerAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    const productId = req.params.id;
+    
+    const product = await Product.findById(productId);
+    
+    if (!product) {
+      return next(new ErrorHandler("Product not found", 404));
+    }
+    
+    if (product.shopId.toString() !== req.user._id.toString()) {
+      return next(new ErrorHandler("Unauthorized", 403));
+    }
+    
+    await product.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
   })
 );
 

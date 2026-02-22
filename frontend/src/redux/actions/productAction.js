@@ -1,7 +1,7 @@
 // src/redux/actions/userActions.js
 import axios from 'axios';
 import { server } from '../../../server';
-import { productCreateFail, productCreateRequest, productCreateSuccess } from '../slices/productSlice';
+import { deleteProductFailed, deleteProductRequest, deleteProductSuccess, getAllProductsShopFailed, getAllProductsShopRequest, getAllProductsShopSuccess, productCreateFail, productCreateRequest, productCreateSuccess } from '../slices/productSlice';
 
 export const createProduct = (newForm) => async (dispatch) => {
   try {
@@ -20,3 +20,37 @@ export const createProduct = (newForm) => async (dispatch) => {
     dispatch(productCreateFail(err.response?.data?.message || err.message));
   }
 };
+
+//get all product of a shop
+export const getShopAllProducts = (id) => async (dispatch) => {
+  try {
+    dispatch(getAllProductsShopRequest());
+
+    const res = await axios.get(
+      `${server}/product/get-all-products-shop/${id}`
+    );
+    dispatch(getAllProductsShopSuccess(res.data.products));
+
+  } catch (err) {
+    dispatch(
+      getAllProductsShopFailed(
+        err.response?.data?.message || err.message
+      )
+    );
+  }
+};
+
+//delete a product
+export const deleteShopProduct = (id) => async (dispatch) => {
+  console.log(id);
+  try {
+    dispatch(deleteProductRequest());
+    const res = await axios.delete(
+      `${server}/product/delete-shop-product/${id}`,
+      { withCredentials: true }
+    );
+    dispatch(deleteProductSuccess(res.data.message));
+  } catch (error) {
+    dispatch(deleteProductFailed(error.response?.data?.message || error.message));
+  }
+}

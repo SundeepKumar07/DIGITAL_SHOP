@@ -1,3 +1,4 @@
+import ShopAllProducts from "../pages/shop/ShopAllProducts";
 import ShopCreateProduct from "../pages/shop/ShopCreateProduct";
 import ShopDashboard from "../pages/shop/ShopDashboard";
 import ShopHomePage from "../pages/shop/ShopHomePage";
@@ -40,6 +41,11 @@ const ShopRoutes = () => {
     { path: '/shop/create-product', element: 
       <SellerProtectedRoute isAuthenticated={isAuthenticated}>
         <ShopCreateProduct />
+      </SellerProtectedRoute>
+     },
+    { path: '/shop-dashboard-products', element: 
+      <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+        <ShopAllProducts />
       </SellerProtectedRoute>
      },
   ]
