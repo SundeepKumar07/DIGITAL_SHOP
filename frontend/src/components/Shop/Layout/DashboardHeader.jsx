@@ -5,8 +5,12 @@ import { MdOutlineLocalOffer } from 'react-icons/md';
 import { BiMessageSquareDetail } from 'react-icons/bi';
 import { FiPackage, FiShoppingBag } from 'react-icons/fi';
 import { BACKEND_URL } from '../../../../server';
+import { useState } from 'react';
+import { FaBars } from "react-icons/fa6";
+import { RxCross2 } from "react-icons/rx";
 
 const DashboardHeader = () => {
+  const [open, setOpen] = useState(false);
   const { seller } = useSelector(state => state.seller);
   return (
     <div className='w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4'>
@@ -16,7 +20,13 @@ const DashboardHeader = () => {
         </Link>
       </div>
       <div className='flex items-center'>
-        <div className='flex items-center mr-4'>
+        <div className={`block sm:hidden absolute right-5`} onClick={() => setOpen(true)}>
+          <FaBars size={25} />
+        </div>
+        <div className={`${!open ? 'hidden' : 'flex flex-col sm:flex-row bg-white sm:bg-transparent gap-4 sm:gap-0 h-screen sm:h-full absolute top-3 right-0'} sm:flex items-center sm:mr-4`}>
+          <div className='mb-5 block sm:hidden' onClick={()=> setOpen(false)}>
+            <RxCross2 size={25} />
+          </div>  
           <Link to={'/shop-dashboard/cupouns'}>
             <AiOutlineGift
               size={30}

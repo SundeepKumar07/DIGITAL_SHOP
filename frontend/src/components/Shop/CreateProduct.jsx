@@ -114,7 +114,7 @@ const CreateProduct = () => {
   }, [dispatch, error, success]);
 
   return (
-    <div className="w-[90%] sm:w-[80%] bg-white shadow rounded p-6 h-[80vh] overflow-y-scroll no-scrollbar">
+    <div className="w-[90%] sm:w-[80%] bg-white shadow rounded p-4 sm:p-6 h-[80vh] overflow-y-scroll no-scrollbar">
       <h5 className="text-2xl font-semibold text-center mb-6">
         Create Product
       </h5>
