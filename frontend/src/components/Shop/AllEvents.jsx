@@ -1,27 +1,27 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteShopProduct, getShopAllProducts } from '../../redux/actions/productAction';
 import { Link } from 'react-router-dom';
 import { AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
 import { DataGrid } from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
-import { clearDeleteState } from '../../redux/slices/productSlice';
+import { deleteShopEvent, getShopAllEvents } from '../../redux/actions/eventAction';
+import { clearDeleteState } from '../../redux/slices/eventSlice';
 
-const AllProducts = () => {
+const AllEvents = () => {
     const dispatch = useDispatch();
-    const { isLoading, products, getProductsSuccess, deleteLoading, deleteProSuccess, deleteError } = useSelector(state => state.product);
+    const { events ,getEventsLoading, deleteLoading, deleteEventSuccess, deleteError } = useSelector(state => state.event);
     const { seller } = useSelector(state => state.seller);
     //============================ useEffects =========================
     useEffect(() => {
         if (seller && seller._id) {
-            dispatch(getShopAllProducts(seller._id));
+            dispatch(getShopAllEvents(seller._id));
         }
     }, [seller]);
 
     useEffect(() => {
-        if (deleteProSuccess) {
-            toast.success("Product deleted successfully");
-            dispatch(getShopAllProducts(seller._id));
+        if (deleteEventSuccess) {
+            toast.success("Event deleted successfully");
+            dispatch(getShopAllEvents(seller._id));
             dispatch(clearDeleteState());
         }
 
@@ -29,13 +29,13 @@ const AllProducts = () => {
             toast.error(deleteError);
             dispatch(clearDeleteState());
         }
-    }, [deleteProSuccess, deleteError, dispatch]);
+    }, [deleteEventSuccess, deleteError, dispatch]);
 
 
     //============================ Handlers ==========================
     const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this product?")) {
-            dispatch(deleteShopProduct(id));
+        if (window.confirm("Are you sure you want to delete this event?")) {
+            dispatch(deleteShopEvent(id));
         }
     };
 
@@ -84,7 +84,7 @@ const AllProducts = () => {
                 const product_name = params.row.name.replace(/\s+/g, "-");
 
                 return (
-                    <Link to={`/product/${product_name}`}>
+                    <Link to={`/event/${product_name}`}>
                         <button className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition duration-300">
                             <AiOutlineEye size={18} />
                         </button>
@@ -113,19 +113,19 @@ const AllProducts = () => {
         },
     ];
 
-    const row = products?.map(product => ({
-        id: product._id,
-        name: product.name,
-        price: "US$ " + product.originalPrice,
-        stock: product.stock,
-        sold: product.sold_out,
+    const row = events?.map(event => ({
+        id: event._id,
+        name: event.name,
+        price: "US$ " + event.originalPrice,
+        stock: event.stock,
+        sold: event.sold_out,
     })) || [];
 
     //==================== return statements ===================
     return (
         <>
             {
-                isLoading ? (
+                getEventsLoading ? (
                     <div>
                         Loading...
                     </div>
@@ -188,4 +188,4 @@ const AllProducts = () => {
     )
 }
 
-export default AllProducts
+export default AllEvents

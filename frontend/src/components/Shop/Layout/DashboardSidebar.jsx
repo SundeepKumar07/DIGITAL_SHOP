@@ -63,7 +63,7 @@ const DashboardSidebar = ({active}) => {
             </Link>
         </div>
         <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-create-event'} className={`w-full flex items-center ${active == 6 ? 'text-[crimson]' : 'text-[#555]'}`}>
+            <Link to={'/shop/screate-event'} className={`w-full flex items-center ${active == 6 ? 'text-[crimson]' : 'text-[#555]'}`}>
                 <VscNewFile
                     size={25}
                 />

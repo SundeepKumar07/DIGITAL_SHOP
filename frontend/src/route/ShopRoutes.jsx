@@ -1,4 +1,6 @@
+import ShopAllEvents from "../pages/shop/ShopAllEvents";
 import ShopAllProducts from "../pages/shop/ShopAllProducts";
+import ShopCreateEvent from "../pages/shop/ShopCreateEvent";
 import ShopCreateProduct from "../pages/shop/ShopCreateProduct";
 import ShopDashboard from "../pages/shop/ShopDashboard";
 import ShopHomePage from "../pages/shop/ShopHomePage";
@@ -43,11 +45,21 @@ const ShopRoutes = () => {
         <ShopCreateProduct />
       </SellerProtectedRoute>
      },
-    { path: '/shop-dashboard-products', element: 
+     { path: '/shop-dashboard-products', element: 
       <SellerProtectedRoute isAuthenticated={isAuthenticated}>
         <ShopAllProducts />
       </SellerProtectedRoute>
      },
+     { path: '/shop-dashboard-events', element: 
+      <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+        <ShopAllEvents />
+      </SellerProtectedRoute>
+     },
+     { path: '/shop/create-event', element: 
+       <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+         <ShopCreateEvent />
+       </SellerProtectedRoute>
+      },
   ]
   return routes;
 };

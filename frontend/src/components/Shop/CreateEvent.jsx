@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { categoriesData } from "../../static/data.jsx";
-import { createProduct } from "../../redux/actions/productAction.js";
-import { clearProductSuccess } from "../../redux/slices/productSlice.js";
+import { createEvent } from "../../redux/actions/eventAction.js";
+import { clearCreateEvent } from "../../redux/slices/eventSlice.js";
 
-const CreateProduct = () => {
+const CreateEvent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { seller } = useSelector((state) => state.seller);
@@ -21,6 +21,8 @@ const CreateProduct = () => {
     originalPrice: "",
     discountPrice: "",
     stock: "",
+    startDate: "",
+    endDate: "",
   });
 
   const onChangeValue = (e) => {
@@ -68,6 +70,23 @@ const CreateProduct = () => {
       return;
     }
 
+    const today = new Date().toISOString().split("T")[0];
+
+    if (!form.startDate || !form.endDate) {
+      toast.error("Start and End dates are required");
+      return;
+    }
+
+    if (form.startDate < today) {
+      toast.error("Start date cannot be in the past");
+      return;
+    }
+
+    if (form.endDate <= form.startDate) {
+      toast.error("End date must be after start date");
+      return;
+    }
+
     if (form.images.length === 0) {
       toast.error("Please upload at least one image");
       return;
@@ -87,34 +106,36 @@ const CreateProduct = () => {
 
     newForm.append("shopId", seller._id);
 
-      dispatch(createProduct(newForm));
-      // Reset form
-      setForm({
-        images: [],
-        name: "",
-        description: "",
-        category: "",
-        tags: "",
-        originalPrice: "",
-        discountPrice: "",
-        stock: "",
-      });
+    dispatch(createEvent(newForm));
+    // Reset form
+    setForm({
+      images: [],
+      name: "",
+      description: "",
+      category: "",
+      tags: "",
+      originalPrice: "",
+      discountPrice: "",
+      stock: "",
+      startDate: "",
+      endDate: "",
+    });
   };
 
-  useEffect(()=> {
-    if(error){
+  useEffect(() => {
+    if (error) {
       toast.error(error);
     }
-    if(success){
-      dispatch(clearProductSuccess());
-      toast.success("Product created successfully");
+    if (success) {
+      dispatch(clearCreateEvent());
+      toast.success("Event created successfully");
     }
   }, [dispatch, error, success]);
 
   return (
     <div className="w-[90%] sm:w-[80%] bg-white shadow rounded p-4 sm:p-6 h-[80vh] overflow-y-scroll no-scrollbar">
       <h5 className="text-2xl font-semibold text-center mb-6">
-        Create Product
+        Create Event
       </h5>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -122,7 +143,7 @@ const CreateProduct = () => {
         {/* NAME */}
         <div>
           <label htmlFor="name" className="block font-medium mb-1">
-            Product Name <span className="text-red-500">*</span>
+            Event Product Name <span className="text-red-500">*</span>
           </label>
           <input
             id="name"
@@ -131,7 +152,7 @@ const CreateProduct = () => {
             value={form.name}
             onChange={onChangeValue}
             required
-            placeholder="Enter Product Name"
+            placeholder="Enter Event Product Name"
             className="w-full h-[45px] border px-3 rounded"
           />
         </div>
@@ -147,7 +168,7 @@ const CreateProduct = () => {
             value={form.description}
             onChange={onChangeValue}
             required
-            placeholder="Enter Product Description"
+            placeholder="Enter Event Product Description"
             className="w-full border px-3 py-2 rounded"
           />
         </div>
@@ -185,7 +206,7 @@ const CreateProduct = () => {
             name="tags"
             value={form.tags}
             onChange={onChangeValue}
-            placeholder="Enter Product Tags"
+            placeholder="Enter Event Product Tags"
             className="w-full h-[45px] border px-3 rounded"
           />
         </div>
@@ -242,6 +263,40 @@ const CreateProduct = () => {
           />
         </div>
 
+        {/* EVENT DATES */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="startDate" className="block font-medium mb-1">
+              Start Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="startDate"
+              type="date"
+              name="startDate"
+              value={form.startDate}
+              onChange={onChangeValue}
+              required
+              className="w-full h-[45px] border px-3 rounded"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="endDate" className="block font-medium mb-1">
+              End Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="endDate"
+              type="date"
+              name="endDate"
+              value={form.endDate}
+              onChange={onChangeValue}
+              required
+              min={form.startDate}
+              className="w-full h-[45px] border px-3 rounded"
+            />
+          </div>
+        </div>
+
         {/* IMAGE UPLOAD */}
         <div>
           <label className="block font-medium mb-2">
@@ -291,11 +346,11 @@ const CreateProduct = () => {
           disabled={isLoading}
           className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700 transition"
         >
-          {isLoading ? "Creating Product..." : "Create Product"}
+          {isLoading ? "Creating Event..." : "Create Event"}
         </button>
       </form>
     </div>
   );
 };
 
-export default CreateProduct;
+export default CreateEvent;
