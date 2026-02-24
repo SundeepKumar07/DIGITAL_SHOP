@@ -10,7 +10,7 @@ const CreateEvent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { seller } = useSelector((state) => state.seller);
-  const { isLoading, success, error, product } = useSelector((state) => state.product);
+  const { createEventLoading, createEventsuccess, createEventError, event } = useSelector((state) => state.event);
   const fileInputRef = useRef(null);
   const [form, setForm] = useState({
     images: [],
@@ -123,14 +123,14 @@ const CreateEvent = () => {
   };
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
+    if (createEventError) {
+      toast.error(createEventError);
     }
-    if (success) {
+    if (createEventsuccess) {
       dispatch(clearCreateEvent());
       toast.success("Event created successfully");
     }
-  }, [dispatch, error, success]);
+  }, [dispatch, createEventError, createEventsuccess]);
 
   return (
     <div className="w-[90%] sm:w-[80%] bg-white shadow rounded p-4 sm:p-6 h-[80vh] overflow-y-scroll no-scrollbar">
@@ -343,10 +343,10 @@ const CreateEvent = () => {
         {/* SUBMIT */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={createEventLoading}
           className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700 transition"
         >
-          {isLoading ? "Creating Event..." : "Create Event"}
+          {createEventLoading ? "Creating Event..." : "Create Event"}
         </button>
       </form>
     </div>

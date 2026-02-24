@@ -2,10 +2,14 @@ import express from "express";
 import { upload } from "../multer.js";
 import catchAsyncError from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
-import Product from "../model/product.js";
 import Shop from "../model/shop.js";
 import { isSellerAuthenticated } from "../middleware/auth.js";
 import Event from "../model/event.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const eventRouter = express.Router();
 
@@ -73,17 +77,29 @@ eventRouter.delete(
   isSellerAuthenticated,
   catchAsyncError(async (req, res, next) => {
     const eventId = req.params.id;
-    
+
     const event = await Event.findById(eventId);
-    
+
     if (!event) {
       return next(new ErrorHandler("Event not found", 404));
     }
-    
+
     if (event.shopId.toString() !== req.user._id.toString()) {
       return next(new ErrorHandler("Unauthorized", 403));
     }
-    
+
+    // 🔥 Delete Images From Uploads Folder
+    await Promise.all(
+      event.images.map(async (image) => {
+        const filePath = path.join(__dirname, "../uploads", image);
+
+        if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+        }
+      })
+    );
+
+    // 🔥 Then Delete Event From DB
     await event.deleteOne();
 
     res.status(200).json({

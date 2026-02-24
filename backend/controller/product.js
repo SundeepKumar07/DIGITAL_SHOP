@@ -5,6 +5,11 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import Product from "../model/product.js";
 import Shop from "../model/shop.js";
 import { isSellerAuthenticated } from "../middleware/auth.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const productRouter = express.Router();
 
@@ -73,17 +78,28 @@ productRouter.delete(
   isSellerAuthenticated,
   catchAsyncError(async (req, res, next) => {
     const productId = req.params.id;
-    
+
     const product = await Product.findById(productId);
-    
+
     if (!product) {
       return next(new ErrorHandler("Product not found", 404));
     }
-    
+
     if (product.shopId.toString() !== req.user._id.toString()) {
       return next(new ErrorHandler("Unauthorized", 403));
     }
-    
+
+    // 🔥 Delete Images From Uploads Folder
+    await Promise.all(
+      product.images.map(async (image) => {
+        const filePath = path.join(__dirname, "../uploads", image);
+
+        if (fs.existsSync(filePath)) {
+          await fs.promises.unlink(filePath);
+        }
+      })
+    );
+
     await product.deleteOne();
 
     res.status(200).json({
