@@ -8,6 +8,7 @@ import connectDB from "./db/db.js";
 import shopRouter from "./controller/shop.js";
 import productRouter from "./controller/product.js";
 import eventRouter from "./controller/event.js";
+import couponCodeRouter from "./controller/couponCode.js";
 // import fileUpload from "express-fileupload";
 
 const app = express();
@@ -37,6 +38,7 @@ app.use('/api/v2/user', userRouter)
 app.use('/api/v2/shop', shopRouter)
 app.use('/api/v2/product', productRouter)
 app.use('/api/v2/event', eventRouter)
+app.use('/api/v2/coupon-code', couponCodeRouter)
 
 //errorHandler
 app.use(ErrorHandlerMiddleware);

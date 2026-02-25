@@ -1,3 +1,4 @@
+import ShopAllCoupouns from "../pages/shop/ShopAllCoupouns";
 import ShopAllEvents from "../pages/shop/ShopAllEvents";
 import ShopAllProducts from "../pages/shop/ShopAllProducts";
 import ShopCreateEvent from "../pages/shop/ShopCreateEvent";
@@ -58,6 +59,11 @@ const ShopRoutes = () => {
      { path: '/shop/create-event', element: 
        <SellerProtectedRoute isAuthenticated={isAuthenticated}>
          <ShopCreateEvent />
+       </SellerProtectedRoute>
+      },
+     { path: '/shop-dashboard/coupouns', element: 
+       <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+         <ShopAllCoupouns />
        </SellerProtectedRoute>
       },
   ]

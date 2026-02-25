@@ -4,6 +4,7 @@ import userReducer from './slices/userSlice';
 import sellerReducer from './slices/sellerSlice';
 import productReducer from './slices/productSlice';
 import eventReducer from './slices/eventSlice';
+import couponRouter from './slices/couponSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     seller: sellerReducer,
     product: productReducer,
     event: eventReducer,
+    couponCode: couponRouter,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
