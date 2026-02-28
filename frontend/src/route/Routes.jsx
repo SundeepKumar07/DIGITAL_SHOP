@@ -53,7 +53,7 @@ const AppRoutes = () => {
     { path: '/best-selling', element: <BestSelling /> },
     { path: '/events', element: <EventsPage /> },
     { path: '/faq', element: <FAQSPage /> },
-    { path: '/products/:name', element: <ProductDetailPage /> },  
+    { path: '/products/:id', element: <ProductDetailPage /> },  
   ];
 
   return routes;

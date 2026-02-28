@@ -1,7 +1,9 @@
+import { useSelector } from 'react-redux'
 import styles from '../../styles/styles'
 import EventCard from './EventCard'
 
 const Events = () => {
+    const { allEvents } = useSelector(state => state.event)
     return (
         <div>
             <div className={`${styles.section}`}>
@@ -9,7 +11,7 @@ const Events = () => {
                     Popular Events
                 </div>
                 <div className='grid w-full mb-12'>
-                    <EventCard />
+                    <EventCard data={allEvents[0]} />
                 </div>
             </div>
         </div>

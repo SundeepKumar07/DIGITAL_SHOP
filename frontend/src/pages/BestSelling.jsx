@@ -2,17 +2,18 @@ import { useSearchParams } from "react-router-dom";
 import Header from "../components/Layout/Header";
 import styles from "../styles/styles";
 import { useEffect, useState } from "react";
-import { productData } from "../static/data";
 import ProductCard from "../components/Route/ProductCard/ProductCard";
+import { useSelector } from "react-redux";
 
 const BestSelling = () => {
     const [searchParams] = useSearchParams();
     const categoriesData = searchParams.get("category");
     const [data, setData] = useState([]);
+    const {allProducts} = useSelector(state => state.product);
 
     useEffect(() => {
         let d = [];
-        d = productData && [...productData].sort((a, b) => b.total_sell - a.total_sell);
+        d = allProducts && [...allProducts].sort((a, b) => b.total_sell - a.total_sell);
         setData(d);
     }, [categoriesData]); // important: add dependency
 

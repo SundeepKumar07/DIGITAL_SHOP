@@ -174,4 +174,21 @@ shopRouter.get('/logout-shop', isSellerAuthenticated, catchAsyncError(async (req
     }
 }))
 
+//getting shop for product id
+// GET /api/shop/:id => get shop by ID
+shopRouter.get("/find/:id", catchAsyncError(async (req, res, next) => {
+    const shopId = req.params.id;
+
+    const shop = await Shop.findById(shopId);
+
+    if (!shop) {
+        return next(new ErrorHandler("Shop not found", 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        shop
+    });
+}));
+
 export default shopRouter;

@@ -1,49 +1,96 @@
-import React, { useState } from 'react'
-import { productData } from '../../static/data';
-import ProductCard from '../Route/ProductCard/ProductCard';
-import styles from '../../styles/styles';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import ProductCard from "../Route/ProductCard/ProductCard";
+import styles from "../../styles/styles";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getShopAllProducts } from "../../redux/actions/productAction";
 
-const ShopProfileData = ({ isOwner }) => {
+const ShopProfileData = ({ isOwner, shopId }) => {
   const [active, setActive] = useState(1);
-  return (
-    <div className='w-full'>
-      <div className="flex flex-col sm:flex-row  w-full justify-between border-b-2 pb-2">
-        <div className='flex w-full px-2 gap-2 flex-wrap mb-2 md:mb-0'>
-          <div className="flex items-center pr-[20px]">
-            <h5 onClick={() => setActive(1)} className={`font-[600] text-[20px] ${active == 1 ? 'text-red-500' : 'text-[#000000a6]'} cursor-pointer`}>
-              Shop Products
-            </h5>
-          </div>
-          <div className="flex items-center pr-[20px]">
-            <h5 onClick={() => setActive(2)} className={`font-[600] text-[20px] ${active == 2 ? 'text-red-500' : 'text-[#000000a6]'} cursor-pointer`}>
-              Shop Evens
-            </h5>
-          </div>
-          <div className="flex items-center pr-[20px]">
-            <h5 onClick={() => setActive(3)} className={`font-[600] text-[20px] ${active == 3 ? 'text-red-500' : 'text-[#000000a6]'} cursor-pointer`}>
-              Shop Reviews
-            </h5>
-          </div>
-        </div>
-        {
-          isOwner && (
-            <Link to={`/shop-dashboard`} className={`${styles.button} !h-[42px] !m-0 !rounded-[4px]`}>
-              Go Dasboard
-            </Link>
-          )
-        }
-      </div>
-      <br />
-      <div className="grid grid-cols-1 gap-[12px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px]">
-        {
-          productData && productData.map((i, index) => (
-            <ProductCard data={i} key={index} />
-          ))
-        }
-      </div>
-    </div>
-  )
-}
+  const { isLoading, products, error } = useSelector(state => state.product);
 
-export default ShopProfileData
+  return (
+    <div className="w-full">
+
+      {/* Tabs */}
+      <div className="flex flex-col sm:flex-row w-full justify-between border-b-2 pb-2">
+        <div className="flex w-full px-2 gap-2 flex-wrap mb-2 md:mb-0">
+
+          <h5
+            onClick={() => setActive(1)}
+            className={`font-[600] text-[20px] ${active === 1 ? "text-red-500" : "text-[#000000a6]"
+              } cursor-pointer`}
+          >
+            Shop Products
+          </h5>
+
+          <h5
+            onClick={() => setActive(2)}
+            className={`font-[600] text-[20px] ${active === 2 ? "text-red-500" : "text-[#000000a6]"
+              } cursor-pointer`}
+          >
+            Shop Events
+          </h5>
+
+          <h5
+            onClick={() => setActive(3)}
+            className={`font-[600] text-[20px] ${active === 3 ? "text-red-500" : "text-[#000000a6]"
+              } cursor-pointer`}
+          >
+            Shop Reviews
+          </h5>
+        </div>
+
+        {isOwner && (
+          <Link
+            to={`/shop-dashboard`}
+            className={`${styles.button} !h-[42px] !m-0 !rounded-[4px]`}
+          >
+            Go Dashboard
+          </Link>
+        )}
+      </div>
+
+      <br />
+
+      {/* PRODUCTS TAB */}
+      {active === 1 && (
+        <>
+          {isLoading ? (
+            <h2 className="text-center py-10">Loading...</h2>
+          ) : error ? (
+            <h2 className="text-center text-red-500 py-10">{error}</h2>
+          ) : (
+            <div className="grid grid-cols-1 gap-[12px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px]">
+              {products && products.length > 0 ? (
+                products.map((product) => (
+                  <ProductCard data={product} key={product._id} />
+                ))
+              ) : (
+                <h3 className="text-center w-full col-span-full">
+                  No products found
+                </h3>
+              )}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* EVENTS TAB */}
+      {active === 2 && (
+        <div className="text-center py-10">
+          Events section coming soon...
+        </div>
+      )}
+
+      {/* REVIEWS TAB */}
+      {active === 3 && (
+        <div className="text-center py-10">
+          Reviews section coming soon...
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ShopProfileData;

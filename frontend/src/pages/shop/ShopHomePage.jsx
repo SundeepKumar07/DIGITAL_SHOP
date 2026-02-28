@@ -1,12 +1,24 @@
 import styles from '../../styles/styles';
 import ShopInfo from "../../components/Shop/ShopInfo";
 import ShopProfileData from "../../components/Shop/ShopProfileData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch, useSelector } from 'react-redux';
+import { getShopAllProducts } from '../../redux/actions/productAction';
 
 const ShopHomePage = () => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  //============================ useEffects =========================
+  const {products} = useSelector(state => state.product);
+  const {sellerLoading, seller} = useSelector(state => state.seller);
+
+  useEffect(() => {
+    if (seller && seller._id) {
+      dispatch(getShopAllProducts(seller._id));
+    }
+  }, [seller]);
 
   return (
     <div className={`${styles.section} bg-[#f5f5f5] min-h-screen`}>
@@ -16,7 +28,7 @@ const ShopHomePage = () => {
         <div className="relative w-full md:w-[25%]">
           {/* Sidebar for desktop */}
           <div className="hidden sm:block bg-white rounded-lg shadow-sm overflow-y-auto h-[90vh] sticky top-4 p-4">
-            <ShopInfo isOwner={true} />
+            <ShopInfo isOwner={true} seller={seller} products={products}/>
           </div>
 
           {/* Mobile sidebar toggle button */}
@@ -30,7 +42,7 @@ const ShopHomePage = () => {
               <div className="flex justify-end mb-4">
                 <RxCross2 size={25} onClick={() => setOpen(false)} className="cursor-pointer" />
               </div>
-              <ShopInfo isOwner={true} />
+              {!sellerLoading && <ShopInfo isOwner={true} seller={seller} products={products} />}
             </div>
           )}
         </div>

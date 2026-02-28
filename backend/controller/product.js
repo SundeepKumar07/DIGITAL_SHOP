@@ -29,7 +29,7 @@ productRouter.post(
       if (!shop) {
         return next(new ErrorHandler("Shop not found", 404));
       }
-      const existingProduct = await Product.findOne({ name });
+      const existingProduct = await Product.findOne({ name, shopId });
       if (existingProduct) {
         return next(new ErrorHandler("Product Already Exist", 400));
       }
@@ -105,6 +105,19 @@ productRouter.delete(
     res.status(200).json({
       success: true,
       message: "Product deleted successfully",
+    });
+  })
+);
+
+//getting all products of all shops
+productRouter.get(
+  "/get-all-products",
+  catchAsyncError(async (req, res) => {
+    const products = await Product.find();
+    if(!products) return next(new ErrorHandler("no product available"))
+    res.status(200).json({
+      success: true,
+      products,
     });
   })
 );

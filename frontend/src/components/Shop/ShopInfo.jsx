@@ -5,8 +5,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const ShopInfo = ({ isOwner }) => {
-    const { sellerLoading, seller } = useSelector(state => state.seller);
+const ShopInfo = ({ isOwner, seller, products }) => {
     const navigate = useNavigate();
 
     const logoutHandler = () => {
@@ -17,38 +16,39 @@ const ShopInfo = ({ isOwner }) => {
         }).catch((err) => {
             console.log(err.response.data.message);
         })
-    }
+    };
+
 
     return (
         <div>
             <div className='w-full py-5'>
                 <div className="w-full flex items-center justify-center flex-col">
-                    <img src={`${BACKEND_URL}/${seller.avatar}`} alt=""
+                    <img src={`${BACKEND_URL}/${seller?.avatar}`} alt=""
                         className='w-[150px] h-[150px] rounded-full object-cover'
                     />
                     <h3 className="text-center px-2 text-[20px]">
-                        {seller.name}
+                        {seller?.name}
                     </h3>
                     <p className='text-[16px] text-[#000000a6] p-[10px] flex items-center'>
-                        {seller.description}
+                        {seller?.description}
                     </p>
                 </div>
             </div>
             <div className="p-3">
                 <h5 className='font-[600]'>Address</h5>
-                <h4 className='text-[#000000a6'>{seller.address}</h4>
+                <h4 className='text-[#000000a6'>{seller?.address}</h4>
             </div>
             <div className="p-3">
                 <h5 className='font-[600]'>Phone Number</h5>
-                <h4 className='text-[#000000a6'>{seller.phoneNumber}</h4>
+                <h4 className='text-[#000000a6'>{seller?.phoneNumber}</h4>
             </div>
             <div className="p-3">
                 <h5 className='font-[600]'>Total Products</h5>
-                <h4 className='text-[#000000a6'>{10}</h4>
+                <h4 className='text-[#000000a6'>{products?.length}</h4>
             </div>
             <div className="p-3">
                 <h5 className='font-[600]'>Shop Ratings</h5>
-                <h4 className='text-[#000000a6'>{4 / 5}</h4>
+                <h4 className='text-[#000000a6'>{seller?.ratings /5}</h4>
             </div>
             <div className="p-3">
                 <h5 className='font-[600]'>Joined On</h5>

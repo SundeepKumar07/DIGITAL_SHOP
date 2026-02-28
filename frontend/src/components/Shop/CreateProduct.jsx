@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { categoriesData } from "../../static/data.jsx";
 import { createProduct } from "../../redux/actions/productAction.js";
-import { clearProductSuccess } from "../../redux/slices/productSlice.js";
+import { clearProductErrors, clearProductSuccess } from "../../redux/slices/productSlice.js";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
@@ -57,7 +57,6 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!seller?._id) {
       toast.error("Seller not found");
       return;
@@ -104,6 +103,7 @@ const CreateProduct = () => {
   useEffect(()=> {
     if(error){
       toast.error(error);
+      dispatch(clearProductErrors());
     }
     if(success){
       dispatch(clearProductSuccess());

@@ -7,7 +7,7 @@ import { AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import styles from '../../styles/styles.js'
 import DropDown from './DropDown.jsx'
-import { productData, categoriesData } from '../../static/data';
+import { categoriesData } from '../../static/data';
 import Navbar from './Navbar.jsx';
 import { useSelector } from 'react-redux';
 import { BACKEND_URL } from '../../../server.js';
@@ -26,11 +26,13 @@ const Header = ({ activeHeading }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { isAuthenticated, user } = useSelector(state => state.user);
 
+  const {allProducts} = useSelector(state => state.product);
+
   const handleSearchTextChange = (e) => {
     const term = e.target.value;
     setSearchText(term);
 
-    const filterProducts = productData.filter((product) =>
+    const filterProducts = allProducts.filter((product) =>
       product.name.toLocaleLowerCase().includes(term.toLocaleLowerCase())
     )
     setSearchData(filterProducts);
@@ -69,7 +71,7 @@ const Header = ({ activeHeading }) => {
                     return (
                       <Link key={index} to={`/products/${productName}`}>
                         <div class="full flex items-start py-2 hover:bg-gray-200">
-                          <img src={i.image_Url[0].url} alt="image" className='w-[40px] h-[40px] m-[10px]' />
+                          <img src={`${BACKEND_URL}/${i.images[0]}`} alt="image" className='w-[40px] h-[40px] m-[10px]' />
                           <h1>{i.name}</h1>
                         </div>
                       </Link>

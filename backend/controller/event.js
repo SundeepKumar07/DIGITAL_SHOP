@@ -59,7 +59,7 @@ eventRouter.post(
   })
 );
 
-//getting all product of a shop
+//getting all events of a shop
 eventRouter.get(
   "/get-all-events-shop/:id",
   catchAsyncError(async (req, res) => {
@@ -71,7 +71,7 @@ eventRouter.get(
   })
 );
 
-// //deleting a single product
+//deleting a single product
 eventRouter.delete(
   "/delete-shop-event/:id",
   isSellerAuthenticated,
@@ -105,6 +105,19 @@ eventRouter.delete(
     res.status(200).json({
       success: true,
       message: "Event deleted successfully",
+    });
+  })
+);
+
+//get all events of all shops
+eventRouter.get(
+  "/get-all-events",
+  catchAsyncError(async (req, res) => {
+    const events = await Event.find();
+    if(!events) return next(new ErrorHandler("no event available"));
+    res.status(200).json({
+      success: true,
+      events,
     });
   })
 );

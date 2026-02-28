@@ -1,103 +1,145 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import styles from "../../../styles/styles.js";
-import { AiFillHeart, AiFillStar, AiOutlineEye, AiOutlineHeart, AiOutlineShoppingCart, AiOutlineStar } from "react-icons/ai";
-import ProductDetailCard from "../ProductDetailCard/ProductDetailCard.jsx";
 
-const ProductCard = ({data}) => {
+import {
+  AiFillHeart,
+  AiFillStar,
+  AiOutlineEye,
+  AiOutlineHeart,
+  AiOutlineShoppingCart,
+  AiOutlineStar,
+} from "react-icons/ai";
+import ProductDetailCard from "../ProductDetailCard/ProductDetailCard.jsx";
+import { BACKEND_URL } from "../../../../server.js";
+
+const ProductCard = ({ data }) => {
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const d = data.name;
-  const productName = data?.name ? data.name.replace(/\s+/g, "-") : "";
+  if (!data) return null;
+
+  const productName = data?.name
+    ? data.name.replace(/\s+/g, "-").toLowerCase()
+    : "";
+
+  const imageUrl =
+    data?.images && data.images.length > 0
+      ? data.images[0]
+      : "/placeholder.png";
+
+  const discountPercentage =
+    data?.originalPrice && data?.discountPrice
+      ? Math.round(
+          ((data.originalPrice - data.discountPrice) /
+            data.originalPrice) *
+            100
+        )
+      : 0;
+
   return (
     <>
-    <div className={`w-full h-[370px] lg:h-[375px] bg-white rounded-lg p-3 shadow-sm cursor-pointer relative`}>
-      <div className="justify-end">
+      <div className="w-full h-[370px] lg:h-[375px] bg-white rounded-lg p-3 shadow-sm cursor-pointer relative">
+        
+        {/* Image */}
+        <Link to={`/products/${data._id}`}>
+          <img
+            src={`${BACKEND_URL}/${imageUrl}`}
+            alt={data?.name}
+            className="w-full h-[170px] object-contain"
+          />
+        </Link>
 
-      </div>
-      <Link to={`/products/${productName}`}>
-        <img src={data.image_Url[0].url} alt=""
-        className={`w-full h-[170px] object-contain`}
-        />
-      </Link>
-      <Link to={`/`}>
-        <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
-      </Link>
-      <Link to={`/products/${productName}`}>
-        <h4 className="pb-4 font-[500">
-          {data.name.length > 40 ? data.name.slice(0, 40) + "...": data.name}
-        </h4>
+        {/* Shop Name */}
+        <h5 className={`${styles.shop_name}`}>
+          {data?.shop?.name || "Not specified"}
+        </h5>
+
+        {/* Product Name */}
+        <Link to={`/products/${productName}`}>
+          <h4 className="pb-2 font-[500]">
+            {data?.name?.length > 40
+              ? data.name.slice(0, 40) + "..."
+              : data?.name}
+          </h4>
+        </Link>
+
+        {/* Rating (Static for now) */}
         <div className="flex">
-          <AiFillStar
-            size={20}
-            className="cursor-pointer" 
-            color="#F6BA00"
-          />
-          <AiOutlineStar
-            size={20}
-            className="cursor-pointer" 
-            color="#F6BA00"
-          />
+          <AiFillStar size={20} color="#F6BA00" />
+          <AiOutlineStar size={20} color="#F6BA00" />
         </div>
 
-        <div className={`py-2 flex items-center justify-between`}>
-          <div className="flex">
+        {/* Price Section */}
+        <div className="py-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <h5 className={`${styles.productDiscountPrice}`}>
-              {(data.price === 0? data.price : data.discount_price) + " PKR"}
+              {data?.discountPrice} PKR
             </h5>
+
             <h4 className={`${styles.price}`}>
-              {data.price ? data.price + " PKR": null}
+              {data?.originalPrice} PKR
             </h4>
-            <span className="font-[400] text-[17px] text-[#68d284]">
-              {data.total_sell} sold
-            </span>
+
+            {discountPercentage > 0 && (
+              <span className="text-[14px] text-green-600">
+                -{discountPercentage}%
+              </span>
+            )}
           </div>
         </div>
-      </Link>
-        {/* side options  */}
-      <div>
-        {
-          click?
-          <AiFillHeart
-            size={22}
-            onClick={() => setClick(false)}
-            className={`cursor-pointer absolute right-2 top-2`}
-            color= {click? "red" : "#333"}
-            title="Remove from wish list"
-          />
-          : <AiOutlineHeart
-            size={22}
-            onClick={() => setClick(true)}
-            className={`cursor-pointer absolute right-2 top-2`}
-            color= {click? "red" : "#333"}
-            title="Add in to wish list"
-          />
-        }
+
+        {/* Sold Count */}
+        <span className="font-[400] text-[15px] text-[#68d284]">
+          {data?.sold_out || 0} sold
+        </span>
+
+        {/* Side Icons */}
+        <div>
+          {click ? (
+            <AiFillHeart
+              size={22}
+              onClick={() => setClick(false)}
+              className="cursor-pointer absolute right-2 top-2"
+              color="red"
+              title="Remove from wish list"
+            />
+          ) : (
+            <AiOutlineHeart
+              size={22}
+              onClick={() => setClick(true)}
+              className="cursor-pointer absolute right-2 top-2"
+              color="#333"
+              title="Add to wish list"
+            />
+          )}
+
           <AiOutlineEye
             size={22}
-            onClick={() => setOpen(!open)}
-            className={`cursor-pointer absolute right-2 top-14`}
-            color= {"#333"}
+            onClick={() => setOpen(true)}
+            className="cursor-pointer absolute right-2 top-14"
+            color="#333"
             title="Quick view"
           />
+
           <AiOutlineShoppingCart
             size={22}
-            onClick={() => setOpen(!open)}
-            className={`cursor-pointer absolute right-2 top-26`}
-            color= {"#444"}
+            className="cursor-pointer absolute right-2 top-24"
+            color="#444"
             title="Add to cart"
           />
 
-          {/* open functionality  */}
-          {
-            open &&
-              <ProductDetailCard open={open} setOpen={setOpen} data={data} />
-          }
+          {open && (
+            <ProductDetailCard
+              open={open}
+              setOpen={setOpen}
+              data={data}
+            />
+          )}
+        </div>
       </div>
-    </div>
     </>
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;

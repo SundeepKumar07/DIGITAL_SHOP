@@ -8,7 +8,7 @@ const ShopCreateEvent = () => {
       <DashboardHeader/>
       <div className="flex items-center justify-between w-full">
         <div className="md:w-[280px] w-[50px]">
-          <DashboardSidebar active={4}/>
+          <DashboardSidebar active={6}/>
         </div>
         <div className='w-full justify-center flex'>
             <CreateEvent/>

@@ -18,6 +18,9 @@ const initialState = {
   deleteLoading: false,
   deleteEventSuccess: false,
   deleteError: null,
+
+  //all events
+  allEvents: null,
 };
 
 const eventSlice = createSlice({
@@ -49,6 +52,21 @@ const eventSlice = createSlice({
       state.getEventsSuccess = true;
     },
     getAllEventsShopFailed: (state, action) => {
+      state.getEventsLoading = false;
+      state.error = action.payload;
+      state.getEventsSuccess = false;
+    },
+
+    //=========================== get all Pvents of shop =========================
+    getAllEventsRequest: (state) => {
+      state.getEventsLoading = true;
+    },
+    getAllEventsSuccess: (state, action) => {
+      state.getEventsLoading = false;
+      state.allEvents = action.payload;
+      state.getEventsSuccess = true;
+    },
+    getAllEventsFailed: (state, action) => {
       state.getEventsLoading = false;
       state.error = action.payload;
       state.getEventsSuccess = false;
@@ -102,6 +120,9 @@ export const {
   getAllEventsShopFailed,
   getAllEventsShopRequest,
   getAllEventsShopSuccess,
+  getAllEventsFailed,
+  getAllEventsRequest,
+  getAllEventsSuccess,
   deleteEventFailed,
   deleteEventRequest,
   deleteEventSuccess,

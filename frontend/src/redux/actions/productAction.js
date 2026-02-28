@@ -1,7 +1,7 @@
 // src/redux/actions/userActions.js
 import axios from 'axios';
 import { server } from '../../../server';
-import { deleteProductFailed, deleteProductRequest, deleteProductSuccess, getAllProductsShopFailed, getAllProductsShopRequest, getAllProductsShopSuccess, productCreateFail, productCreateRequest, productCreateSuccess } from '../slices/productSlice';
+import { deleteProductFailed, deleteProductRequest, deleteProductSuccess, getAllProductsFailed, getAllProductsRequest, getAllProductsShopFailed, getAllProductsShopRequest, getAllProductsShopSuccess, getAllProductsSuccess, productCreateFail, productCreateRequest, productCreateSuccess } from '../slices/productSlice';
 
 export const createProduct = (newForm) => async (dispatch) => {
   try {
@@ -54,3 +54,22 @@ export const deleteShopProduct = (id) => async (dispatch) => {
     dispatch(deleteProductFailed(error.response?.data?.message || error.message));
   }
 }
+
+//get all product of all shops
+export const getAllProducts = () => async (dispatch) => {
+  try {
+    dispatch(getAllProductsRequest());
+
+    const res = await axios.get(
+      `${server}/product/get-all-products`
+    );
+    dispatch(getAllProductsSuccess(res.data.products));
+
+  } catch (err) {
+    dispatch(
+      getAllProductsFailed(
+        err.response?.data?.message || err.message
+      )
+    );
+  }
+};

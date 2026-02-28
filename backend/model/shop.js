@@ -32,6 +32,10 @@ const shopSchema = new mongoose.Schema({
         type: String,
         default: "seller",
     },
+    ratings: {
+        type: Number,
+        default: 0,
+    },
     avatar: {
         type: String,
         required: true,

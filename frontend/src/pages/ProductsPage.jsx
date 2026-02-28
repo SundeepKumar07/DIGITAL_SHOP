@@ -4,18 +4,20 @@ import styles from "../styles/styles";
 import { useEffect, useState } from "react";
 import { productData } from "../static/data";
 import ProductCard from "../components/Route/ProductCard/ProductCard";
+import { useSelector } from "react-redux";
 
 const ProductsPage = () => {
     const [searchParams] = useSearchParams();
     const categoriesData = searchParams.get("category");
     const [data, setData] = useState([]);
+    const {allProducts} = useSelector(state => state.product);
 
     useEffect(() => {
         let d = [];
         if (!categoriesData) {
-            d = [...productData].sort((a, b) => a.total_sell - b.total_sell);
+            d = [...allProducts].sort((a, b) => a.total_sell - b.total_sell);
         } else {
-            d = productData.filter((i) => i.category === categoriesData);
+            d = allProducts.filter((i) => i.category === categoriesData);
         }
         setData(d);
     }, [categoriesData]); // important: add dependency

@@ -1,7 +1,7 @@
 // src/redux/actions/userActions.js
 import axios from 'axios';
 import { server } from '../../../server';
-import { deleteEventFailed, deleteEventRequest, deleteEventSuccess, eventCreateFail, eventCreateRequest, eventCreateSuccess, getAllEventsShopFailed, getAllEventsShopRequest, getAllEventsShopSuccess } from '../slices/eventSlice';
+import { deleteEventFailed, deleteEventRequest, deleteEventSuccess, eventCreateFail, eventCreateRequest, eventCreateSuccess, getAllEventsFailed, getAllEventsRequest, getAllEventsShopFailed, getAllEventsShopRequest, getAllEventsShopSuccess, getAllEventsSuccess } from '../slices/eventSlice';
 
 export const createEvent = (newForm) => async (dispatch) => {
   try {
@@ -52,3 +52,21 @@ export const deleteShopEvent = (id) => async (dispatch) => {
     dispatch(deleteEventFailed(error.response?.data?.message || error.message));
   }
 }
+
+//getting all events
+export const getAllEvents = () => async (dispatch) => {
+  try {
+    dispatch(getAllEventsRequest());
+    
+    const res = await axios.get(
+      `${server}/event/get-all-events`
+    );
+    dispatch(getAllEventsSuccess(res.data?.events));
+  } catch (err) {
+    dispatch(
+      getAllEventsFailed(
+        err.response?.data?.message || err.message
+      )
+    );
+  }
+};

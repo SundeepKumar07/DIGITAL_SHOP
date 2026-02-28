@@ -1,30 +1,33 @@
 import { useEffect, useState } from "react";
-import { productData } from "../static/data"
-import {useParams} from 'react-router-dom'
+import { useParams } from "react-router-dom";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
 import ProductDetail from "../components/ProductDetail/ProductDetail";
 import SuggestedProducts from "../components/Products/SuggestedProducts";
+import { useSelector } from "react-redux";
 
 const ProductDetailPage = () => {
-  const {name} = useParams();
+  const { id } = useParams();
+  const productId = id;
+
+  const { allProducts } = useSelector((state) => state.product); // fix name
   const [data, setData] = useState(null);
-  const productName = name?.replace(/-/g, " ");
-  
+
   useEffect(() => {
-    const data = productData.find((i) => i.name === productName);
-    setData(data);
-  })
+    if (allProducts && productId) {
+      const product = allProducts.find((i) => i._id === productId);
+      setData(product);
+    }
+  }, [allProducts, productId]);
+
   return (
     <div>
-      <Header/>
+      <Header />
       <ProductDetail data={data} />
-      {
-        data && <SuggestedProducts data={data}/>
-      }
-      <Footer/>
+      {data && <SuggestedProducts data={data} />}
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ProductDetailPage
+export default ProductDetailPage;

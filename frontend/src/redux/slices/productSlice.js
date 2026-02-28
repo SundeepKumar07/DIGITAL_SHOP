@@ -5,7 +5,9 @@ const initialState = {
   isLoading: false,
   success: false,
   product: null,
+  products: null,
   error: null,
+  allProducts: null,
 };
 
 const productSlice = createSlice({
@@ -74,12 +76,33 @@ const productSlice = createSlice({
       state.deleteError = null;
     },
 
+    //=========================== get all productsp =========================
+    getAllProductsRequest: (state) => {
+      state.isLoading = true;
+      state.getProductsSuccess = false;
+      state.error = null;
+    },
+
+    getAllProductsSuccess: (state, action) => {
+      state.isLoading = false;
+      state.allProducts = action.payload;
+      state.getProductsSuccess = true;
+    },
+
+    getAllProductsFailed: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.getProductsSuccess = false;
+    },
+
     //========================= clear error and succes ===================s
     clearProductErrors: (state) => {
       state.error = null;
+      state.isLoading = false;
     },
     clearProductSuccess: (state) => {
       state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -94,6 +117,9 @@ export const {
   deleteProductFailed,
   deleteProductRequest,
   deleteProductSuccess,
+  getAllProductsFailed,
+  getAllProductsRequest,
+  getAllProductsSuccess,
   clearDeleteState,
   clearProductErrors,
   clearProductSuccess,

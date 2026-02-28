@@ -1,34 +1,53 @@
 import styles from '../../styles/styles'
 import CountDown from './CountDown'
+import { BACKEND_URL } from '../../../server'
 
-const EventCard = () => {
+const EventCard = ({ data }) => {
+  if (!data) return null
+
   return (
     <div className='flex flex-col sm:flex-row bg-white rounded-md pb-12'>
+      {/* Product Image */}
       <div className='w-full xl:w-[40%]'>
-        <img src="https://m.media-amazon.com/images/I/31Vle5fVdaL.jpg" alt="" />
+        <img 
+          src={data.images && data.images.length > 0 ? `${BACKEND_URL}/${data.images[0]}` : '/placeholder.png'} 
+          alt={data.name} 
+          className='w-full h-full object-contain'
+        />
       </div>
+
+      {/* Product Details */}
       <div className='w-full xl:w-[60%] flex flex-col items-center justify-center pr-2'>
         <div>
-          <h3 className={styles.productTitle}>Iphone 14 pro max 256 gb ssd and 8 gb</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda expedita sit odio distinctio laudantium nihil harum saepe rerum? Odit animi quis neque? Quisquam magnam, numquam repellat fuga perferendis autem doloribus quo! Error non omnis veritatis voluptate rerum corrupti, itaque repellat culpa molestiae repudiandae, illo quibusdam quas dolores ab iste incidunt quasi iure. Voluptate, repellat, ex commodi nam vero nulla officiis, distinctio delectus soluta eius fugiat! Fugit accusantium labore, dolore praesentium commodi sapiente nihil excepturi quos magnam deserunt eius incidunt libero veritatis quae. Voluptatum ab deleniti deserunt sint ipsum, ipsa quo id unde expedita quas aliquam porro, labore minima. Possimus, deleniti!
+          {/* Product Name */}
+          <h3 className={styles.productTitle}>{data.name}</h3>
+
+          {/* Product Description */}
+          <p className='pt-2 text-[15px] text-[#333]'>
+            {data.description || "No description available."}
           </p>
+
+          {/* Price and Sold Info */}
           <div className='flex py-2 justify-between pr-5'>
             <div className='flex gap-2'>
-              <h5 className={`font-[500] line-through text-red-500 text-xl`}>
-                1999
-              </h5>
+              {data.originalPrice && (
+                <h5 className={`font-[500] line-through text-red-500 text-xl`}>
+                  {data.originalPrice} PKR
+                </h5>
+              )}
               <h5 className={`font-bold text-xl font-[Reboto]`}>
-                1000
+                {data.discountPrice} PKR
               </h5>
             </div>
             <div>
               <h2 className='font-bold text-green-500'>
-                120 Sold
+                {data.sold_out || 0} Sold
               </h2>
             </div>
           </div>
-          <CountDown/>
+
+          {/* Countdown */}
+          <CountDown startDate={data.startDate} endDate={data.endDate} />
         </div>
       </div>
     </div>
