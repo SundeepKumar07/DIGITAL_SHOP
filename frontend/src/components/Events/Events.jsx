@@ -11,7 +11,7 @@ const Events = () => {
                     Popular Events
                 </div>
                 <div className='grid w-full mb-12'>
-                    <EventCard data={allEvents[0]} />
+                    {allEvents && <EventCard data={allEvents[0]} />}
                 </div>
             </div>
         </div>

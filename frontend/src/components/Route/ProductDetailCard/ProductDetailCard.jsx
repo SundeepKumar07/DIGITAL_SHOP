@@ -54,7 +54,7 @@ const ProductDetailCard = ({ open, setOpen, data }) => {
           
           {/* LEFT SIDE */}
           <div className="w-full md:w-[40%]">
-            <img src={imageUrl} alt={data?.name} />
+            <img src={imageUrl} alt={data?.name} className="pr-2"/>
 
             {/* Shop Info */}
             {data?.shop && (
