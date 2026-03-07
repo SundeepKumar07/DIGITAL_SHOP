@@ -25,6 +25,7 @@ const Header = ({ activeHeading }) => {
   const [openWishList, setOpenWishList] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
   const { isAuthenticated, user } = useSelector(state => state.user);
+  const { seller } = useSelector(state => state.seller);
 
   const {allProducts} = useSelector(state => state.product);
 
@@ -144,9 +145,13 @@ const Header = ({ activeHeading }) => {
                 </div>
               </div>
               <div className={styles.noramlFlex}>
-                {isAuthenticated ? (
+                {user ? (
                   <Link to={'/profile'} className='relative cursor-pointer mr-[15px]'>
                     <img src={`${BACKEND_URL}/${user.avatar.url}`} alt="profile" className='w-8 h-8 rounded-full' />
+                  </Link>
+                ) : seller ? (
+                  <Link to={'/shop-homepage'} className='relative cursor-pointer mr-[15px]'>
+                    <img src={`${BACKEND_URL}/${seller.avatar}`} alt="profile" className='w-8 h-8 rounded-full' />
                   </Link>
                 ) : (
                   <Link to={'/login'} className='relative cursor-pointer mr-[15px]'>

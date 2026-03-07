@@ -32,37 +32,37 @@ const ShopRoutes = () => {
       </SellerProtectedAuthentication>
      },
     { path: '/shop-dashboard', element: 
-      <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+      <SellerProtectedRoute>
         <ShopDashboard />
       </SellerProtectedRoute>
      },
     { path: '/shop-homePage', element: 
-      <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+      <SellerProtectedRoute>
         <ShopHomePage />
       </SellerProtectedRoute>
      },
     { path: '/shop/create-product', element: 
-      <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+      <SellerProtectedRoute>
         <ShopCreateProduct />
       </SellerProtectedRoute>
      },
      { path: '/shop-dashboard-products', element: 
-      <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+      <SellerProtectedRoute>
         <ShopAllProducts />
       </SellerProtectedRoute>
      },
      { path: '/shop-dashboard-events', element: 
-      <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+      <SellerProtectedRoute>
         <ShopAllEvents />
       </SellerProtectedRoute>
      },
      { path: '/shop/create-event', element: 
-       <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+       <SellerProtectedRoute>
          <ShopCreateEvent />
        </SellerProtectedRoute>
       },
      { path: '/shop-dashboard/coupouns', element: 
-       <SellerProtectedRoute isAuthenticated={isAuthenticated}>
+       <SellerProtectedRoute>
          <ShopAllCoupouns />
        </SellerProtectedRoute>
       },

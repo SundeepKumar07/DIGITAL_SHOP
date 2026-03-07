@@ -44,7 +44,7 @@ const AppRoutes = () => {
     {
       path: '/profile',
       element: (
-        <ProtectedRoute isSellerAuthenticated={isSellerAuthenticated}>
+        <ProtectedRoute>
           <ProfilePage />
         </ProtectedRoute>
       ),
