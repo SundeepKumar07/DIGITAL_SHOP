@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from '../../styles/styles';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineShoppingCart } from 'react-icons/ai';
@@ -23,7 +23,7 @@ const ProductDetail = ({ data }) => {
 
     // Check if product is in wishlist on load
     useEffect(() => {
-        const isInWishList = wishlistItems.find(i => i._id === data._id);
+        const isInWishList = wishlistItems.find(i => i._id === data?._id);
         setClick(!!isInWishList);
     }, [wishlistItems, data?._id]);
 
@@ -142,7 +142,7 @@ const ProductDetail = ({ data }) => {
                         {/* Shop Info */}
                         {shop && (
                             <div className="flex items-center justify-between pt-8 border-t mt-8">
-                                <div className="flex items-center">
+                                <Link to={`/shop/preview/${data?.shopId}`} className="flex items-center">
                                     <img 
                                         src={shop.avatar ? `${BACKEND_URL}/${shop.avatar}` : '/placeholder.png'} 
                                         alt={shop.name} 
@@ -152,7 +152,7 @@ const ProductDetail = ({ data }) => {
                                         <h3 className='text-blue-500 text-[15px]'>{shop.name}</h3>
                                         <h5 className='text-[14px]'>{shop.ratings || 0} Ratings</h5>
                                     </div>
-                                </div>
+                                </Link>
                                 <div>
                                     <button 
                                         onClick={handleMessageSubmit} 
@@ -177,7 +177,7 @@ const ProductDetail = ({ data }) => {
 
 const ProductTabs = ({ data, shop }) => {
     const [active, setActive] = useState(1);
-
+    const navigate = useNavigate();
     return (
         <div className="bg-[#f5f6fb] px-4 md:px-10 py-4 rounded min-h-[40vh]">
             <div className="flex justify-between border-b pb-2">
@@ -222,7 +222,7 @@ const ProductTabs = ({ data, shop }) => {
                             <div><span className='font-[700]'>Joined On:</span> {shop.createdAt?.slice(0,10) || "N/A"}</div>
                             <div><span className='font-[700]'>Total Products:</span> {shop.totalProducts || 0}</div>
                             <div><span className='font-[700]'>Total Reviews:</span> {shop.totalReviews || 0}</div>
-                            <button className="mt-4 bg-black text-white px-5 py-2 rounded hover:opacity-80 transition">Visit Shop</button>
+                            <button className="mt-4 bg-black text-white px-5 py-2 rounded hover:opacity-80 transition cursor-pointer" onClick={() => navigate(`/shop/preview/${data?.shopId}`)}>Visit Shop</button>
                         </div>
                     </div>
                 )}

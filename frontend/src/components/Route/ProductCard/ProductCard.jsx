@@ -10,15 +10,17 @@ import {
   AiOutlineStar,
 } from "react-icons/ai";
 import ProductDetailCard from "../ProductDetailCard/ProductDetailCard.jsx";
-import { BACKEND_URL } from "../../../../server.js";
+import { BACKEND_URL, server } from "../../../../server.js";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist, removeFromWishlist } from "../../../redux/slices/wishListSlice.js";
 import { addToCart } from "../../../redux/slices/cartSlice.js";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const ProductCard = ({ data }) => {
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
+  const [shop, setShop] = useState(null);
 
   if (!data) return null;
 
@@ -32,13 +34,26 @@ const ProductCard = ({ data }) => {
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
   const dispatch = useDispatch();
 
+  //============== Shop extract ===================
+  useEffect(() => {
+    if (!data?.shopId) return;
+    const fetchShop = async () => {
+      try {
+        const res = await axios.get(`${server}/shop/find/${data.shopId}`);
+        setShop(res.data.shop);
+      } catch (err) {
+        console.error("Error fetching shop:", err);
+      }
+    };
+    fetchShop();
+  }, [data?.shopId]);
+
   // Check if product is in wishlist on load
   useEffect(() => {
     const isInWishList = wishlistItems.find((i) => i._id === data._id);
     setClick(!!isInWishList);
   }, [wishlistItems, data._id]);
 
-  // Toggle wishlist
   const toggleWishlist = () => {
     if (click) {
       dispatch(removeFromWishlist(data._id));
@@ -74,9 +89,9 @@ const ProductCard = ({ data }) => {
         </Link>
 
         {/* Shop Name */}
-        <h5 className={`${styles.shop_name} text-gray-500 text-sm`}>
-          {data?.shop?.name || "Not specified"}
-        </h5>
+        <Link to={`/shop/preview/${data.shopId}`} className={`${styles.shop_name} text-blue-900 text-sm`}>
+          {shop?.name || "Not specified"}
+        </Link>
 
         {/* Product Name */}
         <Link to={`/products/${data._id}`}>

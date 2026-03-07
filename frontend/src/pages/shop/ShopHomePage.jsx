@@ -49,7 +49,7 @@ const ShopHomePage = () => {
 
         {/* Main Content */}
         <div className="w-full md:w-[72%] bg-white rounded-lg shadow-sm p-6 mt-2 sm:mt-0">
-          <ShopProfileData isOwner={true} />
+          <ShopProfileData isOwner={true} shopId={seller._id} />
         </div>
 
       </div>

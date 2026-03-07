@@ -121,7 +121,7 @@ const Header = ({ activeHeading }) => {
                   <img src={`${BACKEND_URL}/${user.avatar.url}`} alt="profile" className='w-8 h-8 rounded-full border-2 border-teal-500' />
                 </Link>
               ) : seller ? (
-                <Link to={'/shop-homepage'}>
+                <Link to={'/shop-dashboard'}>
                   <img src={`${BACKEND_URL}/${seller.avatar}`} alt="profile" className='w-8 h-8 rounded-full border-2 border-teal-500' />
                 </Link>
               ) : (

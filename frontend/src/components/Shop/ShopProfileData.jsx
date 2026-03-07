@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../Route/ProductCard/ProductCard";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getShopAllProducts } from "../../redux/actions/productAction";
+import { useSelector } from "react-redux";
 
 const ShopProfileData = ({ isOwner, shopId }) => {
   const [active, setActive] = useState(1);
-  const { isLoading, products, error } = useSelector(state => state.product);
+  const { isLoading, allProducts, error } = useSelector(state => state.product);
+  // filter products belonging to this shop
+  const products = allProducts?.filter((item) => item.shopId === shopId);
 
   return (
     <div className="w-full">

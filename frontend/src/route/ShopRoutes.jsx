@@ -5,6 +5,7 @@ import ShopCreateEvent from "../pages/shop/ShopCreateEvent";
 import ShopCreateProduct from "../pages/shop/ShopCreateProduct";
 import ShopDashboard from "../pages/shop/ShopDashboard";
 import ShopHomePage from "../pages/shop/ShopHomePage";
+import ShopPreviewPage from "../pages/shop/ShopPreviewPage";
 import ShopActivationPage from "../pages/ShopActivationPage";
 import ShopCreatePage from "../pages/ShopCreatePage";
 import ShopLoginPage from "../pages/ShopLoginPage";
@@ -40,6 +41,9 @@ const ShopRoutes = () => {
       <SellerProtectedRoute>
         <ShopHomePage />
       </SellerProtectedRoute>
+     },
+    { path: '/shop/preview/:id', element: 
+        <ShopPreviewPage />
      },
     { path: '/shop/create-product', element: 
       <SellerProtectedRoute>
