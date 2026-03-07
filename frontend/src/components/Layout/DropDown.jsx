@@ -4,33 +4,26 @@ import styles from "../../styles/styles";
 const DropDown = ({ categoriesData, setDropDown }) => {
   const navigate = useNavigate();
 
-  const handleSubmit = (i) => {
-    navigate(`/products?category=${i.title}`);
-    setDropDown(false);
-    window.location.reload();
+  const handleSubmit = (category) => {
+    navigate(`/products?category=${category.title}`);
+    setDropDown(false); // close dropdown
   };
 
   return (
-    <div className="pb-4 w-[262px] bg-[#fff] absolute z-10 rounded-b-md shadow-sm">
+    <div className="absolute z-10 w-[262px] bg-white rounded-b-md shadow-md py-2">
       {categoriesData &&
-        categoriesData.map((i, index) => (
+        categoriesData.map((cat, index) => (
           <div
             key={index}
-            className={`${styles.noramlFlex}`}
-            onClick={() => handleSubmit(i)}
+            onClick={() => handleSubmit(cat)}
+            className={`${styles.noramlFlex} px-3 py-2 hover:bg-gray-100 cursor-pointer transition`}
           >
             <img
-              src={i.image_Url}
-              style={{
-                width: "25px",
-                height: "25px",
-                objectFit: "contain",
-                marginLeft: "10px",
-                userSelect: "none",
-              }}
-              alt=""
+              src={cat.image_Url}
+              alt={cat.title}
+              className="w-6 h-6 object-contain mr-3 select-none"
             />
-            <h3 className="m-3 cursor-pointer select-none">{i.title}</h3>
+            <h3 className="text-sm font-medium select-none">{cat.title}</h3>
           </div>
         ))}
     </div>

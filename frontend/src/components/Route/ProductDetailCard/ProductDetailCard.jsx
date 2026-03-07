@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import styles from "../../../styles/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../../redux/slices/cartSlice";
+import { addToWishlist, removeFromWishlist } from "../../../redux/slices/wishListSlice.js";
+import { toast } from "react-toastify";
 import {
   AiFillHeart,
   AiOutlineHeart,
@@ -10,9 +14,20 @@ import {
 import { BACKEND_URL } from "../../../../server.js";
 
 const ProductDetailCard = ({ open, setOpen, data }) => {
+  const {cartItems} = useSelector(state => state.cart);
+  const {wishlistItems} = useSelector(state => state.wishlist);
+  const dispatch = useDispatch();
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
 
+//=================== setting wishlist ==================
+useEffect(() => {
+  const isInWishList = wishlistItems.find(i => i._id === data._id);
+  if(isInWishList) setClick(true);
+}, [wishlistItems]);
+
+
+//===================== data rendering =======================
   if (!data) return null;
 
   const imageUrl =
@@ -23,12 +38,13 @@ const ProductDetailCard = ({ open, setOpen, data }) => {
   const discountPercentage =
     data?.originalPrice && data?.discountPrice
       ? Math.round(
-          ((data.originalPrice - data.discountPrice) /
-            data.originalPrice) *
-            100
-        )
+        ((data.originalPrice - data.discountPrice) /
+          data.originalPrice) *
+        100
+      )
       : 0;
 
+//==================== increment decrement ====================
   const setDecrement = () => {
     if (count > 1) setCount(count - 1);
   };
@@ -39,10 +55,43 @@ const ProductDetailCard = ({ open, setOpen, data }) => {
     }
   };
 
+  //================== Add To Cart Function =====================
+  const handleAddToCart = () => {
+    const isItemExist = cartItems && cartItems.find(i => i._id === data._id)
+    if(isItemExist){
+      toast.error("Product already in Cart");
+      return;
+    }
+    if (data.stock < count) {
+      toast.error("Product stock limited!");
+      return;
+    }
+
+    const cartData = {
+      ...data,
+      qty: count,
+    };
+
+    dispatch(addToCart(cartData));
+    toast.success("Item added to cart!");
+  };
+
+  //================== Toggle Wish list ======================
+  const toggleWishlist = () => {
+    if (click) {
+      dispatch(removeFromWishlist(data._id));
+      setClick(false);
+    } else {
+      dispatch(addToWishlist(data));
+      setClick(true);
+    }
+  };
+
+
   return (
     <div className="fixed w-full h-screen top-0 left-0 bg-[#00000030] z-40 flex items-center justify-center">
       <div className="w-[90%] lg:w-[60%] h-[90vh] overflow-y-auto md:h-[75vh] bg-white rounded-md p-4 relative">
-        
+
         {/* Close Button */}
         <RxCross1
           size={25}
@@ -51,10 +100,10 @@ const ProductDetailCard = ({ open, setOpen, data }) => {
         />
 
         <div className="block w-full md:flex">
-          
+
           {/* LEFT SIDE */}
           <div className="w-full md:w-[40%]">
-            <img src={imageUrl} alt={data?.name} className="pr-2"/>
+            <img src={imageUrl} alt={data?.name} className="pr-2" />
 
             {/* Shop Info */}
             {data?.shop && (
@@ -107,7 +156,7 @@ const ProductDetailCard = ({ open, setOpen, data }) => {
 
             {/* Quantity + Wishlist */}
             <div className="flex items-center justify-between mt-5 pr-3 w-full">
-              
+
               {/* Quantity */}
               <div>
                 <button
@@ -133,14 +182,14 @@ const ProductDetailCard = ({ open, setOpen, data }) => {
               {click ? (
                 <AiFillHeart
                   size={22}
-                  onClick={() => setClick(false)}
+                  onClick={toggleWishlist}
                   color="red"
                   className="cursor-pointer"
                 />
               ) : (
                 <AiOutlineHeart
                   size={22}
-                  onClick={() => setClick(true)}
+                  onClick={toggleWishlist}
                   className="cursor-pointer"
                 />
               )}
@@ -149,12 +198,12 @@ const ProductDetailCard = ({ open, setOpen, data }) => {
             {/* Add To Cart */}
             <div className="mt-5">
               <button
+                onClick={handleAddToCart}
                 disabled={data?.stock === 0}
-                className={`flex gap-2 items-center rounded px-3 py-2 text-white ${
-                  data?.stock === 0
+                className={`flex gap-2 items-center rounded px-3 py-2 text-white ${data?.stock === 0
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-black"
-                }`}
+                  }`}
               >
                 {data?.stock === 0 ? "Out of Stock" : "Add to Cart"}
                 <AiOutlineShoppingCart />

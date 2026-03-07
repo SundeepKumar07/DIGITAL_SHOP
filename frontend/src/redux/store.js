@@ -5,6 +5,8 @@ import sellerReducer from './slices/sellerSlice';
 import productReducer from './slices/productSlice';
 import eventReducer from './slices/eventSlice';
 import couponRouter from './slices/couponSlice';
+import wishlistReducer from './slices/wishListSlice';
+import cartItemReducer from './slices/cartSlice';
 
 const store = configureStore({
   reducer: {
@@ -13,6 +15,8 @@ const store = configureStore({
     product: productReducer,
     event: eventReducer,
     couponCode: couponRouter,
+    wishlist: wishlistReducer,
+    cart: cartItemReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

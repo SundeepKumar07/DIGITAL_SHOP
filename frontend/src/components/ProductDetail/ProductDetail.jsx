@@ -4,6 +4,10 @@ import axios from 'axios';
 import styles from '../../styles/styles';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineShoppingCart } from 'react-icons/ai';
 import { BACKEND_URL, server } from '../../../server';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../redux/slices/cartSlice';
+import { addToWishlist, removeFromWishlist } from '../../redux/slices/wishListSlice';
+import { toast } from 'react-toastify';
 
 const ProductDetail = ({ data }) => {
     const [count, setCount] = useState(1);
@@ -11,13 +15,21 @@ const ProductDetail = ({ data }) => {
     const [select, setSelect] = useState(0);
     const [shop, setShop] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const images = data?.images || [];
+    const { wishlistItems } = useSelector(state => state.wishlist);
+    const cartItems = useSelector(state => state.cart?.cartItems || []);
 
-    // ✅ Always call hooks first, fetch shop dynamically
+    // Check if product is in wishlist on load
+    useEffect(() => {
+        const isInWishList = wishlistItems.find(i => i._id === data._id);
+        setClick(!!isInWishList);
+    }, [wishlistItems, data?._id]);
+
+    // Fetch shop data dynamically
     useEffect(() => {
         if (!data?.shopId) return;
-
         const fetchShop = async () => {
             try {
                 const res = await axios.get(`${server}/shop/find/${data.shopId}`);
@@ -26,7 +38,6 @@ const ProductDetail = ({ data }) => {
                 console.error("Error fetching shop:", err);
             }
         };
-
         fetchShop();
     }, [data?.shopId]);
 
@@ -34,31 +45,53 @@ const ProductDetail = ({ data }) => {
     const setIncrement = () => setCount(count + 1);
     const handleMessageSubmit = () => navigate(`/inbox/product`);
 
+    const toggleWishlist = () => {
+        if (click) {
+            dispatch(removeFromWishlist(data._id));
+            setClick(false);
+        } else {
+            dispatch(addToWishlist(data));
+            setClick(true);
+        }
+    };
+
+    const handleAddToCart = () => {
+        const isItemExist = cartItems.find(i => i._id === data._id);
+        if (isItemExist) {
+            toast.error("Item already in cart");
+            return;
+        }
+        dispatch(addToCart({ ...data, qty: count }));
+        toast.success("Item added to cart");
+    };
+
     if (!data) return <div className="text-center p-10">Loading product...</div>;
 
     return (
-        <div className='bg-white'>
-            <div className={`${styles.section} w-[90%] md:w-[80%]`}>
-                <div className='block md:flex w-full py-5 gap-6'>
+        <div className="bg-white">
+            <div className={`${styles.section} w-[90%] md:w-[80%] mx-auto`}>
+                <div className="block md:flex w-full py-5 gap-6">
 
                     {/* Left: Images */}
-                    <div className='w-full md:w-[50%]'>
+                    <div className="w-full md:w-1/2">
                         <img 
                             src={images[select] ? `${BACKEND_URL}/${images[select]}` : '/placeholder.png'} 
                             alt={data.name} 
-                            className='w-full h-[400px] object-contain rounded-lg'
+                            className="w-full h-[400px] object-contain rounded-lg shadow-md"
                         />
-                        <div className='flex flex-wrap gap-2 mt-4'>
+                        <div className="flex flex-wrap gap-2 mt-4">
                             {images.slice(0, 6).map((img, index) => (
                                 <div 
                                     key={index} 
-                                    className={`cursor-pointer border-2 ${select === index ? 'border-red-500' : 'border-transparent'} rounded-lg`}
+                                    className={`cursor-pointer border-2 rounded-lg overflow-hidden transition-all ${
+                                        select === index ? 'border-red-500 scale-105' : 'border-gray-200'
+                                    }`}
                                     onClick={() => setSelect(index)}
                                 >
                                     <img 
                                         src={`${BACKEND_URL}/${img}`} 
                                         alt={`${data.name} ${index+1}`} 
-                                        className='h-[80px] w-[80px] object-cover rounded-lg'
+                                        className="h-[80px] w-[80px] object-cover rounded-lg"
                                     />
                                 </div>
                             ))}
@@ -66,35 +99,41 @@ const ProductDetail = ({ data }) => {
                     </div>
 
                     {/* Right: Product Info */}
-                    <div className='w-full md:w-[50%] flex flex-col justify-between'>
+                    <div className="w-full md:w-1/2 flex flex-col justify-between">
                         <div>
                             <h1 className={styles.productTitle}>{data.name}</h1>
-                            <p className='pt-2 text-[15px] text-[#333]'>{data.description}</p>
+                            <p className="pt-2 text-[15px] text-[#333]">{data.description}</p>
 
-                            <div className='flex items-center gap-4 pt-3'>
+                            {/* Price */}
+                            <div className="flex items-center gap-4 pt-3">
                                 <h4 className={styles.productDiscountPrice}>{data.discountPrice} PKR</h4>
                                 {data.originalPrice && (
                                     <h3 className={styles.price}>{data.originalPrice} PKR</h3>
                                 )}
                             </div>
 
+                            {/* Quantity + Wishlist */}
                             <div className={`${styles.noramlFlex} mt-6 justify-between`}>
                                 <div className="flex items-center gap-2">
-                                    <button className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold px-4 py-2 rounded-l" onClick={setDecrement}>-</button>
-                                    <span className="px-4 py-2 bg-gray-200 font-medium">{count}</span>
-                                    <button className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold px-4 py-2 rounded-r" onClick={setIncrement}>+</button>
+                                    <button className="bg-gray-200 px-4 py-2 rounded-l" onClick={setDecrement}>-</button>
+                                    <span className="px-4 py-2 bg-gray-100 font-medium">{count}</span>
+                                    <button className="bg-gray-200 px-4 py-2 rounded-r" onClick={setIncrement}>+</button>
                                 </div>
                                 <div>
                                     {click ? (
-                                        <AiFillHeart size={24} className='cursor-pointer text-red-500' onClick={() => setClick(false)} />
+                                        <AiFillHeart size={24} className='cursor-pointer text-red-500' onClick={toggleWishlist} />
                                     ) : (
-                                        <AiOutlineHeart size={24} className='cursor-pointer text-gray-700' onClick={() => setClick(true)} />
+                                        <AiOutlineHeart size={24} className='cursor-pointer text-gray-700' onClick={toggleWishlist} />
                                     )}
                                 </div>
                             </div>
 
+                            {/* Add to Cart */}
                             <div className="mt-5">
-                                <button className="bg-black text-white flex gap-2 items-center rounded px-4 py-2 hover:opacity-80 transition">
+                                <button 
+                                    className="bg-black text-white flex gap-2 items-center rounded px-4 py-2 hover:opacity-80 transition"
+                                    onClick={handleAddToCart}
+                                >
                                     Add to Cart <AiOutlineShoppingCart />
                                 </button>
                             </div>
@@ -102,8 +141,8 @@ const ProductDetail = ({ data }) => {
 
                         {/* Shop Info */}
                         {shop && (
-                            <div className="flex items-center justify-between pt-8">
-                                <div className='flex items-center'>
+                            <div className="flex items-center justify-between pt-8 border-t mt-8">
+                                <div className="flex items-center">
                                     <img 
                                         src={shop.avatar ? `${BACKEND_URL}/${shop.avatar}` : '/placeholder.png'} 
                                         alt={shop.name} 
@@ -128,25 +167,24 @@ const ProductDetail = ({ data }) => {
                 </div>
 
                 {/* Product Tabs */}
-                <div className='py-10'>
+                <div className="py-10">
                     <ProductTabs data={data} shop={shop} />
                 </div>
             </div>
         </div>
     );
-}
+};
 
-// Tabs Component
 const ProductTabs = ({ data, shop }) => {
     const [active, setActive] = useState(1);
 
     return (
-        <div className='bg-[#f5f6fb] px-4 md:px-10 py-4 rounded min-h-[40vh]'>
-            <div className='flex justify-between border-b pb-2'>
+        <div className="bg-[#f5f6fb] px-4 md:px-10 py-4 rounded min-h-[40vh]">
+            <div className="flex justify-between border-b pb-2">
                 {["Product Details", "Product Reviews", "Product Information"].map((tab, index) => (
-                    <div key={index} className='relative w-[200px] text-center cursor-pointer'>
+                    <div key={index} className="relative w-[200px] text-center cursor-pointer">
                         <h5 
-                            className='text-[#000] text-[18px] md:text-[20px] font-[600]'
+                            className="text-[#000] text-[18px] md:text-[20px] font-[600]"
                             onClick={() => setActive(index + 1)}
                         >
                             {tab}
@@ -156,7 +194,7 @@ const ProductTabs = ({ data, shop }) => {
                 ))}
             </div>
 
-            <div className='pt-5'>
+            <div className="pt-5">
                 {active === 1 && (
                     <div>
                         <p>{data.description}</p>

@@ -1,55 +1,60 @@
-import { brandingData, categoriesData } from "../../../static/data"
-import styles from "../../../styles/styles"
-import { useNavigate } from 'react-router-dom'
+import { brandingData, categoriesData } from "../../../static/data";
+import styles from "../../../styles/styles";
+import { useNavigate } from 'react-router-dom';
+
 const Categories = () => {
     const navigate = useNavigate();
+
     return (
         <>
+            {/* Branding Section */}
             <div className={`${styles.section} hidden sm:block`}>
-                <div className={`leading-1 my-[12px] flex justify-between w-full shadow-sm bg-white rounded-md`}>
-                    {
-                        brandingData && brandingData.map((i, index) => (
-                            <div key={index} className={`flex items-center`}>
-                                {i.icon}
-                                <div className={`px-3`}>
-                                    <h3 className={`font-bold text-sm md:text-base`}>
-                                        {i.title}
-                                    </h3>
-                                    <p className={`text-xs md:text-sm`}>
-                                        {i.Description}
-                                    </p>
-                                </div>
+                <div className="flex justify-between items-center w-full shadow-md bg-gray-50 rounded-lg p-4 my-4">
+                    {brandingData && brandingData.map((item, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                            {item.icon}
+                            <div>
+                                <h3 className="font-bold text-sm md:text-base text-gray-800">
+                                    {item.title}
+                                </h3>
+                                <p className="text-xs md:text-sm text-gray-500">
+                                    {item.Description}
+                                </p>
                             </div>
-                        ))
-                    }
+                        </div>
+                    ))}
                 </div>
             </div>
-            <div className={`${styles.section} bg-white p-6 rounded-lg mb-12`}>
-                <div className={`grid grid-cols-1 gap-[3px] sm:grid-cols-2 md:grid-cols-3 md:gap-[10px] lg:grid-cols-4 lg:gap-[20px] xl:grid-cols-5 xl:gap-[30px]`}>
-                    {
-                        categoriesData && categoriesData.map((i, index) => {
-                            const handleSubmit = (i) => {
-                                navigate(`/products?category=${i.title}`);
-                            }
 
-                            return (
-                                <div
-                                    key={index}
-                                    onClick={() => handleSubmit(i)}
-                                    className={`cursor-pointer w-full flex justify-between lg:justify-center items-center overflow-hidden py-10 lg:p-2`}
-                                >
-                                    <h3 className={`text-[18px] leading-[1.3]`}>{i.title}</h3>
-                                    <img src={i.image_Url}
-                                        className={`object-cover w-[170px] md:w-[100px]`}
-                                        alt="" />
-                                </div>
-                            )
-                        })
-                    }
+            {/* Categories Grid */}
+            <div className={`${styles.section} bg-white p-6 rounded-lg mb-12 shadow-sm`}>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    {categoriesData && categoriesData.map((cat, index) => {
+                        const handleClick = () => {
+                            navigate(`/products?category=${cat.title}`);
+                        };
+
+                        return (
+                            <div
+                                key={index}
+                                onClick={handleClick}
+                                className="cursor-pointer flex flex-col items-center justify-center gap-2 p-6 bg-gray-50 rounded-lg hover:shadow-lg transition transform hover:scale-105"
+                            >
+                                <img
+                                    src={cat.image_Url}
+                                    alt={cat.title}
+                                    className="w-[100px] h-[100px] md:w-[120px] md:h-[120px] object-cover rounded-full"
+                                />
+                                <h3 className="text-center text-[16px] md:text-[18px] font-semibold text-gray-800">
+                                    {cat.title}
+                                </h3>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Categories
+export default Categories;
