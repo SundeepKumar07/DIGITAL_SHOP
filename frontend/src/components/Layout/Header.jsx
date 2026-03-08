@@ -26,6 +26,8 @@ const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector(state => state.user);
   const { seller } = useSelector(state => state.seller);
   const { allProducts } = useSelector(state => state.product);
+  const {cartItems} = useSelector(state => state.cart);
+  const {wishlistItems} = useSelector(state => state.wishlist);
 
   const handleSearchTextChange = (e) => {
     const term = e.target.value;
@@ -109,11 +111,11 @@ const Header = ({ activeHeading }) => {
           <div className='flex items-center gap-4'>
             <div className='relative cursor-pointer' onClick={() => setOpenWishList(true)}>
               <AiOutlineHeart size={26} className='text-gray-700 hover:text-red-500 transition' />
-              <span className='absolute -top-1 -right-1 rounded-full bg-red-500 w-4 h-4 text-xs text-white flex items-center justify-center'>0</span>
+              <span className='absolute -top-1 -right-1 rounded-full bg-red-500 w-4 h-4 text-xs text-white flex items-center justify-center'>{wishlistItems?.length || 0}</span>
             </div>
             <div className='relative cursor-pointer' onClick={() => setOpenCart(!openCart)}>
               <AiOutlineShoppingCart size={26} className='text-gray-700 hover:text-teal-600 transition' />
-              <span className='absolute -top-1 -right-1 rounded-full bg-teal-600 w-4 h-4 text-xs text-white flex items-center justify-center'>0</span>
+              <span className='absolute -top-1 -right-1 rounded-full bg-teal-600 w-4 h-4 text-xs text-white flex items-center justify-center'>{cartItems?.length || 0}</span>
             </div>
             <div>
               {user ? (

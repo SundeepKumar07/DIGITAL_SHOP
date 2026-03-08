@@ -114,20 +114,20 @@ userRouter.post('/activation', catchAsyncError(async (req, res, next) => {
 userRouter.post("/login-user", catchAsyncError(async (req, res, next) => {
     const { email, password } = req.body;
 
-    if(!email || !password){
+    if (!email || !password) {
         return next(new ErrorHandler("Please, fill all fields"));
     }
 
     try {
         const user = await User.findOne({ email }).select("+password");
-        
-        if(!user){
+
+        if (!user) {
             return next(new ErrorHandler("User not found", 404));
         }
 
         const isPasswordValid = await user.comparePassword(password);
 
-        if(!isPasswordValid){
+        if (!isPasswordValid) {
             return next(new ErrorHandler("Invalid Credentials", 400));
         }
         sendToken(user, 201, res);
@@ -142,7 +142,7 @@ userRouter.get('/getuser', isAuthenticated, catchAsyncError(async (req, res, nex
         const user = await User.findById(req.user.id);
 
         //if not
-        if(!user){
+        if (!user) {
             return next(new ErrorHandler("Logged in first"));
         }
 
@@ -172,5 +172,142 @@ userRouter.get('/logout-user', isAuthenticated, catchAsyncError(async (req, res,
     }
 }))
 
-//activation 
+//update user info
+userRouter.put(
+    "/update-user-info",
+    isAuthenticated,
+    catchAsyncError(async (req, res, next) => {
+        try {
+
+            const { name, email, phoneNumber, currentPassword } = req.body;
+
+            // get user with password
+            const user = await User.findById(req.user.id).select("+password");
+
+            if (!user) {
+                return next(new ErrorHandler("User not found", 404));
+            }
+
+            // check password
+            const isPasswordValid = await user.comparePassword(currentPassword);
+
+            if (!isPasswordValid) {
+                return next(new ErrorHandler("Invalid password", 400));
+            }
+
+            // update fields if provided
+            if (name) user.name = name;
+            if (email) user.email = email;
+            if (phoneNumber) user.phoneNumber = phoneNumber;
+
+            await user.save();
+
+            res.status(200).json({
+                success: true,
+                message: "User info updated successfully",
+                user,
+            });
+
+        } catch (err) {
+            return next(new ErrorHandler(err.message, 400));
+        }
+    })
+);
+
+//update avatar
+userRouter.put(
+    "/update-avatar",
+    isAuthenticated,
+    upload.single("file"),
+    catchAsyncError(async (req, res, next) => {
+        try {
+
+            const user = await User.findById(req.user.id);
+
+            if (!user) {
+                return next(new ErrorHandler("User not found", 404));
+            }
+
+            if (!req.file) {
+                return next(new ErrorHandler("No file uploaded", 400));
+            }
+
+            // NEW FILE
+            const filename = req.file.filename;
+
+            // OLD FILE
+            const oldAvatar = user.avatar.public_id;
+
+            // delete old avatar
+            if (fs.existsSync(`uploads/${oldAvatar}`)) {
+                fs.unlinkSync(`uploads/${oldAvatar}`);
+            }
+
+            // update avatar
+            user.avatar = {
+                public_id: filename,
+                url: filename,
+            };
+
+            await user.save();
+
+            res.status(200).json({
+                success: true,
+                message: "Avatar updated successfully",
+                user,
+            });
+
+        } catch (err) {
+            return next(new ErrorHandler(err.message, 400));
+        }
+    })
+);
+
+//adding new addresses
+userRouter.put(
+  "/add-address",
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    const { addressType, address1, address2, city, country, zipCode, phone } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) return next(new ErrorHandler("User not found", 404));
+
+    const newAddress = { addressType, address1, address2, city, country, zipCode, phone };
+
+    user.addresses.push(newAddress);
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  })
+);
+
+//deleting an address
+userRouter.delete(
+  "/delete-address/:index",
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    const index = parseInt(req.params.index);
+
+    const user = await User.findById(req.user.id);
+    if (!user) return next(new ErrorHandler("User not found", 404));
+
+    if (index < 0 || index >= user.addresses.length) {
+      return next(new ErrorHandler("Invalid address index", 400));
+    }
+
+    user.addresses.splice(index, 1);
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  })
+);
+
 export default userRouter;
