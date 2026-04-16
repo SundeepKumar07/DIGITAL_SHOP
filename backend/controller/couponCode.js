@@ -69,5 +69,31 @@ couponCodeRouter.delete(
   })
 );
 
+//get coupon code for checkout
+couponCodeRouter.get(
+  "/validate-coupon",
+  catchAsyncError(async (req, res) => {
+
+    const { code, productId } = req.query;
+
+    const coupon = await CouponCode.findOne({
+      name: code,
+      productId,
+    });
+
+    if (!coupon) {
+      return res.status(404).json({
+        success: false,
+        message: "Invalid coupon code",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      coupon,
+    });
+  })
+);
+
 
 export default couponCodeRouter;

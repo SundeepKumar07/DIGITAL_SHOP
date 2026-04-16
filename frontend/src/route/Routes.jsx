@@ -12,6 +12,8 @@ import SignUp from '../pages/SignUp';
 import UserActivationPage from '../pages/UserActivationPage';
 import ProtectedAuthentication from '../routes/userProtected/ProtectedAuthentication';
 import ProtectedRoute from '../routes/userProtected/ProtectedRoute';
+import CheckoutPage from "../pages/CheckoutPage";
+import PaymentOrderPage from "../pages/PaymentOrderPage";
 
 const AppRoutes = () => {
   const { isSellerAuthenticated } = useSelector((state) => state.seller);
@@ -54,6 +56,8 @@ const AppRoutes = () => {
     { path: '/events', element: <EventsPage /> },
     { path: '/faq', element: <FAQSPage /> },
     { path: '/products/:id', element: <ProductDetailPage /> },  
+    { path: '/checkout', element: <CheckoutPage /> },  
+    { path: '/payment', element: <PaymentOrderPage /> },  
   ];
 
   return routes;

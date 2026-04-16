@@ -4,47 +4,63 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { clearCreateCoupon } from "../../redux/slices/couponSlice";
 import { createCouponCode } from "../../redux/actions/couponAction";
+import { getShopAllProducts } from "../../redux/actions/productAction";
 
 const CreateCouponModal = ({ setOpen }) => {
   const dispatch = useDispatch();
   const { seller } = useSelector((state) => state.seller);
   const { coupon, createCouponLoading, createCouponsuccess, createCouponError, } = useSelector((state) => state.couponCode);
-
+  const { products } = useSelector(state => state.product);
   const [formData, setFormData] = useState({
     name: "",
     value: "",
     minAmount: "",
     maxAmount: "",
+    productId: "",
   });
+  useEffect(() => {
+    dispatch(getShopAllProducts(seller._id));
+  }, [dispatch]);
 
   // ================= Handle Change =================
   const handleChange = (e) => {
-    setFormData({
+    const { name, value } = e.target;
+
+    const updatedData = {
       ...formData,
-      [e.target.name]: e.target.value,
-    });
+      [name]: value,
+    };
+
+    // calculate discount ONLY when both exist
+    if (updatedData.minAmount && updatedData.maxAmount && updatedData.minAmount !== '') {
+      updatedData.value = Math.floor(
+        (updatedData.minAmount / updatedData.maxAmount) * 100
+      );
+    }
+
+    setFormData(updatedData);
   };
 
   // ================= Handle Submit =================
   const handleSubmit = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const { name, value, minAmount, maxAmount } = formData;
+    const { name, value, minAmount, maxAmount, productId } = formData;
 
-  if (!name || !value || !minAmount || !maxAmount) {
-    return toast.error("Please fill all fields");
-  }
+    if (!name || !value || !minAmount || !maxAmount || !productId) {
+      return toast.error("Please fill all fields");
+    }
 
-  if (+minAmount >= +maxAmount) {
-    return toast.error("Min amount must be less than Max amount");
-  }
+    if (+minAmount >= +maxAmount) {
+      return toast.error("Min amount must be less than Max amount");
+    }
 
-  if (+value <= 0 || +value > 100) {
-    return toast.error("Value must be between 1 and 100");
-  }
+    if (+value <= 0 || +value > 100) {
+      return toast.error("Value must be between 1 and 100");
+    }
 
-  dispatch(createCouponCode(formData));
-};
+    dispatch(createCouponCode(formData));
+  };
 
   useEffect(() => {
     if (createCouponError) {
@@ -99,8 +115,8 @@ const CreateCouponModal = ({ setOpen }) => {
               type="number"
               name="value"
               placeholder="10"
+              disabled
               value={formData.value}
-              onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
@@ -108,7 +124,7 @@ const CreateCouponModal = ({ setOpen }) => {
           {/* Min Amount */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              Minimum Amount
+              Discount Amount
             </label>
             <input
               type="number"
@@ -123,7 +139,7 @@ const CreateCouponModal = ({ setOpen }) => {
           {/* Max Amount */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              Maximum Amount
+              Original Amount
             </label>
             <input
               type="number"
@@ -133,6 +149,28 @@ const CreateCouponModal = ({ setOpen }) => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
+          </div>
+
+          {/* select product */}
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              Select Product
+            </label>
+
+            <select
+              name="productId"
+              value={formData.productId}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            >
+              <option value="">Choose Product</option>
+
+              {products?.map((item) => (
+                <option key={item._id} value={item._id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Submit Button */}

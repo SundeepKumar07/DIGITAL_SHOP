@@ -19,7 +19,7 @@ const AllCouponsCodes = () => {
         if (seller && seller._id) {
             dispatch(getShopAllCoupons(seller._id));
         }
-    }, [seller]);
+    }, [seller, dispatch, open]);
 
     useEffect(() => {
         if (deleteCouponSuccess) {
@@ -44,63 +44,63 @@ const AllCouponsCodes = () => {
 
     //==================== Column and row setup =================
     const columns = [
-  { field: "id", headerName: "Coupon ID", minWidth: 180, flex: 0.8 },
+        { field: "id", headerName: "Coupon ID", minWidth: 180, flex: 0.8 },
 
-  {
-    field: "name",
-    headerName: "Coupon Code",
-    minWidth: 150,
-    flex: 1,
-  },
+        {
+            field: "name",
+            headerName: "Coupon Code",
+            minWidth: 150,
+            flex: 1,
+        },
 
-  {
-    field: "value",
-    headerName: "Discount (%)",
-    minWidth: 130,
-    flex: 0.7,
-  },
+        {
+            field: "value",
+            headerName: "Discount (%)",
+            minWidth: 130,
+            flex: 0.7,
+        },
 
-  {
-    field: "minAmount",
-    headerName: "Min Amount",
-    minWidth: 130,
-    flex: 0.7,
-  },
+        {
+            field: "minAmount",
+            headerName: "Min Amount",
+            minWidth: 130,
+            flex: 0.7,
+        },
 
-  {
-    field: "maxAmount",
-    headerName: "Max Amount",
-    minWidth: 130,
-    flex: 0.7,
-  },
+        {
+            field: "maxAmount",
+            headerName: "Max Amount",
+            minWidth: 130,
+            flex: 0.7,
+        },
 
-  // 🗑 Delete
-  {
-    field: "delete",
-    headerName: "Delete",
-    sortable: false,
-    minWidth: 100,
-    flex: 0.5,
-    renderCell: (params) => {
-      return (
-        <button
-          onClick={() => handleDelete(params.row.id)}
-          className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition duration-300"
-        >
-          <AiOutlineDelete size={18} />
-        </button>
-      );
-    },
-  },
-];
+        // 🗑 Delete
+        {
+            field: "delete",
+            headerName: "Delete",
+            sortable: false,
+            minWidth: 100,
+            flex: 0.5,
+            renderCell: (params) => {
+                return (
+                    <button
+                        onClick={() => handleDelete(params.row.id)}
+                        className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition duration-300"
+                    >
+                        <AiOutlineDelete size={18} />
+                    </button>
+                );
+            },
+        },
+    ];
 
     const row = coupons?.map((coupon) => ({
-  id: coupon._id,
-  name: coupon.name,
-  value: coupon.value,
-  minAmount: "US$ " + coupon.minAmount,
-  maxAmount: "US$ " + coupon.maxAmount,
-})) || [];
+        id: coupon._id,
+        name: coupon.name,
+        value: coupon.value,
+        minAmount: "US$ " + coupon.minAmount,
+        maxAmount: "US$ " + coupon.maxAmount,
+    })) || [];
 
     //==================== return statements ===================
     return (

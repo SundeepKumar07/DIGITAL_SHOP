@@ -27,6 +27,10 @@ function App() {
     ...AppRoutes(), 
     ...ShopRoutes()
   ]);
+
+  useEffect(()=> {
+    window.scrollTo(0,0);
+  }, [routes]);
   return (loading || sellerLoading) ? <div className='w-full h-[90vh] flex items-center justify-center'>
     <Lottie
       animationData={loaderAnimation}
