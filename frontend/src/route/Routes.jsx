@@ -56,8 +56,22 @@ const AppRoutes = () => {
     { path: '/events', element: <EventsPage /> },
     { path: '/faq', element: <FAQSPage /> },
     { path: '/products/:id', element: <ProductDetailPage /> },  
-    { path: '/checkout', element: <CheckoutPage /> },  
-    { path: '/payment', element: <PaymentOrderPage /> },  
+    {
+      path: '/checkout',
+      element: (
+        <ProtectedRoute>
+          <CheckoutPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/payment',
+      element: (
+        <ProtectedRoute>
+          <PaymentOrderPage />
+        </ProtectedRoute>
+      ),
+    },
   ];
 
   return routes;

@@ -170,6 +170,7 @@ const Checkout = () => {
               <input
                 type="text"
                 name="name"
+                required
                 placeholder="Full Name"
                 value={formData.name}
                 onChange={handleChange}
@@ -179,6 +180,7 @@ const Checkout = () => {
               <input
                 type="email"
                 name="email"
+                required
                 placeholder="Email Address"
                 value={formData.email}
                 onChange={handleChange}
@@ -193,6 +195,7 @@ const Checkout = () => {
               <input
                 type="text"
                 name="phone"
+                required
                 placeholder="Phone Number"
                 value={formData.phone}
                 onChange={handleChange}
@@ -202,6 +205,7 @@ const Checkout = () => {
               <input
                 type="text"
                 name="zipCode"
+                required
                 placeholder="Zip Code"
                 disabled={selectedAddressIndex === null ? false : true}
                 value={formData.zipCode}
@@ -217,6 +221,7 @@ const Checkout = () => {
               <select
                 name="country"
                 value={formData.country}
+                required
                 onChange={handleChange}
                 disabled={selectedAddressIndex === null ? false : true}
                 className={`input ${selectedAddressIndex !== null && 'bg-gray-100'}`}
@@ -234,6 +239,7 @@ const Checkout = () => {
               <select
                 name="state"
                 value={formData.state}
+                required
                 onChange={handleChange}
                 disabled={selectedAddressIndex === null ? false : true}
                 className={`input ${selectedAddressIndex !== null && 'bg-gray-100'}`}
@@ -250,6 +256,7 @@ const Checkout = () => {
               <select
                 name="city"
                 value={formData.city}
+                required
                 onChange={handleChange}
                 disabled={selectedAddressIndex === null ? false : true}
                 className={`input ${selectedAddressIndex !== null && 'bg-gray-100'}`}
@@ -272,6 +279,7 @@ const Checkout = () => {
               <input
                 type="text"
                 name="address1"
+                required
                 placeholder="Address Line 1"
                 value={formData.address1}
                 disabled={selectedAddressIndex === null ? false : true}

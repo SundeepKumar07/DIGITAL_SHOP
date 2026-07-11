@@ -51,7 +51,7 @@ const SignUp = () => {
         <form onSubmit={handleSubmit} className='flex justify-center flex-col gap-2 p-4 sm:p-6'>
           <div className='flex items-center'>
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnsepRSZ2Dfxh6ZdBFeZoCsm_KW5WwCFn2qw&s" alt="logo" className='w-12 h-10' />
-            <h1 className='font-semibold text-2xl'>Sunny Mobile</h1>
+            <h1 className='font-semibold text-2xl'>Digital Shop</h1>
           </div>
           <h2 className='font-medium text-gray-400'>Enter credentials To create Account</h2>
           <div className='flex flex-col gap-2'>

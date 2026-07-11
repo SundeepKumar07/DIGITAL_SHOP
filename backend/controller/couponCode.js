@@ -12,7 +12,7 @@ couponCodeRouter.post(
   isSellerAuthenticated,
   catchAsyncError(async (req, res, next) => {
 
-    const existingCoupon = await CouponCode.findOne({ name: req.body.name });
+    const existingCoupon = await CouponCode.findOne({ name: req.body.name, productId: req.body.productId });
 
     if (existingCoupon) {
       return next(new ErrorHandler("Coupon code already exists", 400));
