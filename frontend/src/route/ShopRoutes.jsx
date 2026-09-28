@@ -1,3 +1,4 @@
+import ShopOrderDetailPage from "../pages/Order/ShopOrderDetailPage";
 import ShopAllCoupouns from "../pages/shop/ShopAllCoupouns";
 import ShopAllEvents from "../pages/shop/ShopAllEvents";
 import ShopAllProducts from "../pages/shop/ShopAllProducts";
@@ -5,6 +6,7 @@ import ShopCreateEvent from "../pages/shop/ShopCreateEvent";
 import ShopCreateProduct from "../pages/shop/ShopCreateProduct";
 import ShopDashboard from "../pages/shop/ShopDashboard";
 import ShopHomePage from "../pages/shop/ShopHomePage";
+import ShopOrders from "../pages/shop/ShopOrders";
 import ShopPreviewPage from "../pages/shop/ShopPreviewPage";
 import ShopActivationPage from "../pages/ShopActivationPage";
 import ShopCreatePage from "../pages/ShopCreatePage";
@@ -68,6 +70,16 @@ const ShopRoutes = () => {
      { path: '/shop-dashboard/coupouns', element: 
        <SellerProtectedRoute>
          <ShopAllCoupouns />
+       </SellerProtectedRoute>
+      },
+     { path: '/shop-dashboard-orders', element: 
+       <SellerProtectedRoute>
+         <ShopOrders />
+       </SellerProtectedRoute>
+      },
+     { path: '/order/:id', element: 
+       <SellerProtectedRoute>
+         <ShopOrderDetailPage />
        </SellerProtectedRoute>
       },
   ]

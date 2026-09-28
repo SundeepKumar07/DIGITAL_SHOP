@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import userRouter from "./controller/user.js";
@@ -9,16 +8,11 @@ import shopRouter from "./controller/shop.js";
 import productRouter from "./controller/product.js";
 import eventRouter from "./controller/event.js";
 import couponCodeRouter from "./controller/couponCode.js";
+import paymentRouter from "./controller/payment.js";
+import orderRouter from "./controller/order.js";
 // import fileUpload from "express-fileupload";
 
 const app = express();
-
-//config
-if (process.env.NODE_ENV !== 'PRODUCTION') {
-    dotenv.config({
-        path: './config/.env'
-    });
-}
 
 app.use(express.json());
 app.use(cookieParser());
@@ -28,7 +22,6 @@ app.use(cors({
 }));
 app.use('/', express.static("uploads"))
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-// app.use(fileUpload({useTempFiles: true}));
 
 //connecting database
 connectDB();
@@ -39,6 +32,8 @@ app.use('/api/v2/shop', shopRouter)
 app.use('/api/v2/product', productRouter)
 app.use('/api/v2/event', eventRouter)
 app.use('/api/v2/coupon-code', couponCodeRouter)
+app.use('/api/v2/payment', paymentRouter);
+app.use('/api/v2/order', orderRouter)
 
 //errorHandler
 app.use(ErrorHandlerMiddleware);

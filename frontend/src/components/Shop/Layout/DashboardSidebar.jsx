@@ -8,122 +8,53 @@ import { CiMoneyBill, CiSettings } from "react-icons/ci";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
 
-const DashboardSidebar = ({active}) => {
-  return (
-    <div className='w-full h-[89vh] bg-white shadow-sm overflow-y-scroll scroll- sticky top-0 left-0 z-10'>
-        {/* single item  */}
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard'} className={`w-full flex items-center ${active == 1 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <RxDashboard
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Dashboard
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-orders'} className={`w-full flex items-center ${active == 2 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <FiShoppingBag
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    All Orders
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-products'} className={`w-full flex items-center ${active == 3 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <FiPackage
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    All Products
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop/create-product'} className={`w-full flex items-center ${active == 4 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <AiOutlineFolderAdd
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Create Product
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-events'} className={`w-full flex items-center ${active == 5 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <MdOutlineLocalOffer
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    All Events
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop/create-event'} className={`w-full flex items-center ${active == 6 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <VscNewFile
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Create Event
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-withdraw-money'} className={`w-full flex items-center ${active == 7 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <CiMoneyBill
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Withdraw Money
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-messages'} className={`w-full flex items-center ${active == 8 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <BiMessageSquareDetail
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Shop Inbox
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard/coupouns'} className={`w-full flex items-center ${active == 9 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <AiOutlineGift
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Discount Codes
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-refunds'} className={`w-full flex items-center ${active == 10 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <HiOutlineReceiptRefund
-                    size={25}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Refunds
-                </h5>
-            </Link>
-        </div>
-        <div className="w-full items-center md:px-4 px-2 py-2">
-            <Link to={'/shop-dashboard-settings'} className={`w-full flex items-center ${active == 11 ? 'text-[crimson]' : 'text-[#555]'}`}>
-                <CiSettings
-                    size={30}
-                />
-                <h5 className={`p-2 text-[16px] font-[400] md:block hidden`}>
-                    Setting
-                </h5>
-            </Link>
-        </div>
-    </div>
-  )
-}
+const DashboardSidebar = ({ active }) => {
+  const menuItems = [
+    { id: 1, label: "Dashboard", path: "/shop-dashboard", icon: RxDashboard },
+    { id: 2, label: "All Orders", path: "/shop-dashboard-orders", icon: FiShoppingBag },
+    { id: 3, label: "All Products", path: "/shop-dashboard-products", icon: FiPackage },
+    { id: 4, label: "Create Product", path: "/shop/create-product", icon: AiOutlineFolderAdd },
+    { id: 5, label: "All Events", path: "/shop-dashboard-events", icon: MdOutlineLocalOffer },
+    { id: 6, label: "Create Event", path: "/shop/create-event", icon: VscNewFile },
+    { id: 7, label: "Withdraw Money", path: "/shop-dashboard-withdraw-money", icon: CiMoneyBill },
+    { id: 8, label: "Shop Inbox", path: "/shop-dashboard-messages", icon: BiMessageSquareDetail },
+    { id: 9, label: "Discount Codes", path: "/shop-dashboard/coupouns", icon: AiOutlineGift },
+    { id: 10, label: "Refunds", path: "/shop-dashboard-refunds", icon: HiOutlineReceiptRefund },
+    { id: 11, label: "Settings", path: "/shop-dashboard-settings", icon: CiSettings },
+  ];
 
-export default DashboardSidebar
+  return (
+    <aside className="w-full h-[calc(100vh-70px)] bg-white border-r border-gray-100 py-4 overflow-y-auto sticky top-[70px] left-0 z-10 select-none">
+      <div className="flex flex-col gap-1 px-2">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = active === item.id;
+
+          return (
+            <Link
+              key={item.id}
+              to={item.path}
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg font-medium text-sm transition-all duration-200 group ${
+                isActive
+                  ? "bg-blue-50 text-blue-600 border-l-4 border-blue-600 rounded-l-none pl-2"
+                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+              }`}
+            >
+              <Icon 
+                size={isActive ? 22 : 20} 
+                className={`transition-colors flex-shrink-0 ${
+                  isActive ? "text-blue-600" : "text-gray-400 group-hover:text-gray-600"
+                }`} 
+              />
+              <span className="hidden md:block truncate">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </aside>
+  );
+};
+
+export default DashboardSidebar;

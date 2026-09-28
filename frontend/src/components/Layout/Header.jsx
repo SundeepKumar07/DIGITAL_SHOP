@@ -14,6 +14,7 @@ import { BACKEND_URL } from '../../../server.js';
 import Cart from '../Cart/Cart.jsx';
 import WishList from '../WishList/WishList.jsx';
 import { RxCross1 } from 'react-icons/rx';
+import Logo from '../../assets/logo.png'
 
 const Header = ({ activeHeading }) => {
   const [searchText, setSearchText] = useState('');
@@ -48,7 +49,7 @@ const Header = ({ activeHeading }) => {
       {/* Desktop Top Bar */}
       <div className={`${styles.section} sm:h-[35px] hidden sm:flex items-center justify-between sm:mt-5 bg-gradient-to-r from-teal-500 to-cyan-400 rounded-md shadow-md px-5 py-3`}>
         <div className='w-12'>
-          <img src="https://img.freepik.com/premium-vector/online-shopping-logo-design-template-simple-minimal-style-mouse-cursor-with-bag-concepts_502185-289.jpg" alt="logo" className='w-full h-full object-cover rounded' />
+          <img src={Logo} alt="logo" className='w-full h-full object-cover rounded' />
         </div>
         <div className={`w-[50%] relative`}>
           <input
@@ -65,7 +66,7 @@ const Header = ({ activeHeading }) => {
               {searchData.map((i, index) => {
                 const productName = i.name.replace(/\s+/g, "-");
                 return (
-                  <Link key={index} to={`/products/${productName}`}>
+                  <Link key={index} to={`/products/${i._id}`}>
                     <div className="flex items-center p-2 hover:bg-teal-50 transition rounded-md">
                       <img src={`${BACKEND_URL}/${i.images[0]}`} alt="image" className='w-10 h-10 object-cover rounded-md mr-3' />
                       <h1 className="text-sm text-gray-700">{i.name}</h1>

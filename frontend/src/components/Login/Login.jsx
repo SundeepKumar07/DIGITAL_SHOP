@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { useState } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {server} from '../../../server.js'
+import { server } from '../../../server.js';
 import { toast } from 'react-toastify';
+import Logo from '../../assets/logo.png'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,16 +12,12 @@ const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
 
   const onChangeValue = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newForm = new FormData();
-    newForm.append("email", form.email);
-    newForm.append("password", form.password);
-    //axios request
     axios
       .post(`${server}/user/login-user`, {
         email: form.email,
@@ -30,76 +27,110 @@ const Login = () => {
       })
       .then((res) => {
         navigate('/');
-        toast.success(res.data.message);
+        toast.success(res.data.message || "Logged in successfully!");
       })
       .catch((err) => {
-        toast.error(err.response.data.message);
-        return console.log(err.response.data.message);
-      })
-  }
+        const errorMsg = err.response?.data?.message || "Something went wrong";
+        toast.error(errorMsg);
+        console.log(errorMsg);
+      });
+  };
+
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <div className='w-lg m-3 sm:m-0 sm:w-lg md:w-md lg:w-md bg-white rounded-md shadow-lg shadow-gray-300'>
-        <form onSubmit={handleSubmit} className='flex justify-center flex-col gap-4 p-4 sm:p-6'>
-          <div className='flex items-center'>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnsepRSZ2Dfxh6ZdBFeZoCsm_KW5WwCFn2qw&s" alt="logo" className='w-12 h-10' />
-            <h1 className='font-semibold text-2xl'>Digital Shop</h1>
+    <div className='flex justify-center items-center min-h-screen bg-gray-50 px-4'>
+      <div className='w-full max-w-md bg-white rounded-2xl shadow-xl shadow-gray-200/80 border border-gray-100 transition duration-300 hover:shadow-2xl'>
+        <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-6 sm:p-8'>
+          
+          {/* Logo Brand Zone */}
+          <div className='flex items-center gap-3 justify-center sm:justify-start'>
+            <div className='w-12 h-10 overflow-hidden rounded-md bg-teal-50 flex items-center justify-center'>
+              <img 
+                src={Logo} 
+                alt="logo" 
+                className='w-full h-full object-cover' 
+              />
+            </div>
+            <h1 className='font-bold text-2xl bg-gradient-to-r from-teal-600 to-cyan-500 bg-clip-text text-transparent'>
+              Digital Shop
+            </h1>
           </div>
-          <h2 className='font-medium text-gray-400'>Login To Your User Account</h2>
-          <div className='flex flex-col gap-2'>
-            <label htmlFor="email" className='font-medium text-gray-500'>Email</label>
-            <input type="text"
+
+          <div className='text-center sm:text-left'>
+            <h2 className='text-xl font-bold text-gray-800'>Welcome Back!</h2>
+            <p className='text-sm font-medium text-gray-400 mt-0.5'>Login to your user account</p>
+          </div>
+
+          {/* Email Input Field */}
+          <div className='flex flex-col gap-1.5'>
+            <label htmlFor="email" className='font-semibold text-sm text-gray-600'>Email Address</label>
+            <input 
+              type="email"
               name='email'
               id='email'
               required
               value={form.email}
               onChange={onChangeValue}
-              className='outline-none ring-2 ring-gray-300 rounded-md px-3 py-2 text-gray-900' />
+              placeholder="name@example.com"
+              className='outline-none ring-2 ring-gray-200 focus:ring-teal-400 rounded-xl px-4 py-2.5 text-gray-900 transition-all placeholder-gray-400' 
+            />
           </div>
-          <div className='flex flex-col gap-2 rela'>
-            <label htmlFor="password" className='font-medium text-gray-500'>Password</label>
-            <div className='relative'>
-              <input type={`${visible? "text" : "password"}`}
+
+          {/* Password Input Field */}
+          <div className='flex flex-col gap-1.5'>
+            <label htmlFor="password" className='font-semibold text-sm text-gray-600'>Password</label>
+            <div className='relative w-full'>
+              <input 
+                type={visible ? "text" : "password"}
                 name='password'
                 id='password'
                 required
                 value={form.password}
                 onChange={onChangeValue}
-                className='outline-none ring-2 ring-gray-300 rounded-md px-3 py-2 text-gray-900 w-full' />
-              {visible ?
-                <AiOutlineEye
-                  className='absolute top-2 right-1 cursor-pointer'
-                  size={25}
-                  onClick={() => setVisible(false)}
-                />
-                :
-                <AiOutlineEyeInvisible
-                  className='absolute top-2 right-1 cursor-pointer'
-                  size={25}
-                  onClick={() => setVisible(true)}
-                />
-              }
+                placeholder="••••••••"
+                className='outline-none ring-2 ring-gray-200 focus:ring-teal-400 rounded-xl px-4 py-2.5 text-gray-900 w-full transition-all placeholder-gray-400 pr-12' 
+              />
+              <div className='absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-400 hover:text-teal-500 transition-colors'>
+                {visible ? (
+                  <AiOutlineEye size={22} className='cursor-pointer' onClick={() => setVisible(false)} />
+                ) : (
+                  <AiOutlineEyeInvisible size={22} className='cursor-pointer' onClick={() => setVisible(true)} />
+                )}
+              </div>
             </div>
           </div>
-          <div className='flex justify-between'>
-            <div className='flex gap-2 items-center text-sm'>
-              <label htmlFor="remember-me" className='font-medium text-gray-500'>Remember me</label>
-              <input type="checkbox"
+
+          {/* Remember Me & Forgot Password Layout */}
+          <div className='flex justify-between items-center text-sm pt-1'>
+            <div className='flex gap-2 items-center cursor-pointer select-none'>
+              <input 
+                type="checkbox"
                 name='remember-me'
                 id='remember-me'
+                className="w-4 h-4 rounded text-teal-600 focus:ring-teal-400 border-gray-300 cursor-pointer accent-teal-600"
               />
+              <label htmlFor="remember-me" className='font-medium text-gray-500 cursor-pointer'>Remember me</label>
             </div>
-            <a href="" className='font-semibold text-blue-700 text-sm'>Forgot Password</a>
+            <Link to="/forgot-password" className='font-semibold text-teal-600 hover:text-teal-700 hover:underline transition-colors'>
+              Forgot Password?
+            </Link>
           </div>
-          <button className='w-full bg-blue-400 py-2 rounded-md font-semibold'>Submit</button>
-          <div className='flex gap-2 text-sm'>
-            <p>Not have any account</p>
-            <Link to="/sign-up" className='font-semibold text-blue-700'>Sign Up</Link>
+
+          {/* Submit Action Button */}
+          <button className='w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white py-3 rounded-xl font-bold shadow-md shadow-teal-100/50 hover:shadow-lg transition-all transform active:scale-[0.98] mt-2'>
+            Sign In
+          </button>
+
+          {/* Footer Navigation */}
+          <div className='flex gap-1.5 text-sm justify-center font-medium text-gray-500 mt-1'>
+            <p>Don't have an account?</p>
+            <Link to="/sign-up" className='font-bold text-teal-600 hover:text-teal-700 hover:underline transition-colors'>
+              Sign Up
+            </Link>
           </div>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

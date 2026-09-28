@@ -14,6 +14,9 @@ import ProtectedAuthentication from '../routes/userProtected/ProtectedAuthentica
 import ProtectedRoute from '../routes/userProtected/ProtectedRoute';
 import CheckoutPage from "../pages/CheckoutPage";
 import PaymentOrderPage from "../pages/PaymentOrderPage";
+import PaymentSuccessPage from "../pages/PaymentSuccessPage";
+import OrderDetailsPage from "../pages/Order/OrderDetailPage";
+import TrackOrderPage from "../pages/Order/TrackOrderPage";
 
 const AppRoutes = () => {
   const { isSellerAuthenticated } = useSelector((state) => state.seller);
@@ -69,6 +72,30 @@ const AppRoutes = () => {
       element: (
         <ProtectedRoute>
           <PaymentOrderPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/order/success',
+      element: (
+        <ProtectedRoute>
+          <PaymentSuccessPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/user/order/:id',
+      element: (
+        <ProtectedRoute>
+          <OrderDetailsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/user/order/track/:id',
+      element: (
+        <ProtectedRoute>
+          <TrackOrderPage />
         </ProtectedRoute>
       ),
     },

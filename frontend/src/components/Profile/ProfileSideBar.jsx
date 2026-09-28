@@ -1,129 +1,69 @@
-import { AiOutlineCreditCard, AiOutlineLogin, AiOutlineLogout, AiOutlineMessage } from 'react-icons/ai';
+import { AiOutlineCreditCard, AiOutlineLogout, AiOutlineMessage } from 'react-icons/ai';
 import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from 'react-icons/hi';
 import { RxPerson } from 'react-icons/rx';
-import { useNavigate } from 'react-router-dom'
-import { MdOutlineTrackChanges } from "react-icons/md"
-import { TbAddressBook } from "react-icons/tb"
+import { useNavigate } from 'react-router-dom';
+import { MdOutlineTrackChanges } from "react-icons/md";
+import { TbAddressBook } from "react-icons/tb";
 import axios from 'axios';
-import { server } from '../../../server';
 import { toast } from 'react-toastify';
+import { server } from '../../../server';
 
-const ProfileSideBar = ({active, setActive}) => {
+const ProfileSideBar = ({ active, setActive }) => {
   const navigate = useNavigate();
 
   const logoutHandler = () => {
-    axios.get(`${server}/user/logout-user`, {withCredentials: true}).then((res) => {
-      toast.success(res.data.message)
-      navigate('/login');
-      window.location.reload(true);
-    }).catch((err) => {
-      console.log(err.response.data.message);
-    })
-  }
-  return (
-    <div className='w-full bg-white shadow-sm rounded-10 p-3 sm:p-4 pt-8 rounded-md'>
-      <div className='flex items-center cursor-pointer w-full mb-8' onClick={()=> setActive(1)}>
-        <RxPerson 
-          size={25}
-          color={active === 1 ? "red" : ''}
-        />
-        <span
-          className={`${active === 1 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Profile
-        </span>
-      </div>
-      <div className='flex items-center cursor-pointer w-full mb-8' onClick={()=> setActive(2)}>
-        <HiOutlineShoppingBag 
-          size={25}
-          color={active === 2 ? "red" : ''}
-        />
-        <span
-          className={`${active === 2 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Others
-        </span>
-      </div>
-      <div className='flex items-center cursor-pointer w-full mb-8' 
-        onClick={()=> setActive(3)}
-      >
-        <HiOutlineReceiptRefund 
-          size={25}
-          color={active === 3 ? "red" : ''}
-        />
-        <span
-          className={`${active === 3 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Refunds
-        </span>
-      </div>
-      <div className='flex items-center cursor-pointer w-full mb-8' 
-        onClick={()=> {setActive(4); navigate(`/inbox`)}}
-      >
-        <AiOutlineMessage 
-          size={25}
-          color={active === 4 ? "red" : ''}
-        />
-        <span
-          className={`${active === 4 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Inbox
-        </span>
-      </div>
-      <div className='flex items-center cursor-pointer w-full mb-8' 
-        onClick={()=> {setActive(5)}}
-      >
-        <MdOutlineTrackChanges 
-          size={25}
-          color={active === 5 ? "red" : ''}
-        />
-        <span
-          className={`${active === 5 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Track Order
-        </span>
-      </div>
-      <div className='flex items-center cursor-pointer w-full mb-8' 
-        onClick={()=> {setActive(6)}}
-      >
-        <AiOutlineCreditCard 
-          size={25}
-          color={active === 6 ? "red" : ''}
-        />
-        <span
-          className={`${active === 6 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Payment Methods
-        </span>
-      </div>
-      <div className='flex items-center cursor-pointer w-full mb-8' 
-        onClick={()=> {setActive(7)}}
-      >
-        <TbAddressBook 
-          size={25}
-          color={active === 7 ? "red" : ''}
-        />
-        <span
-          className={`${active === 7 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Address
-        </span>
-      </div>
-      <div className='flex items-center cursor-pointer w-full mb-8' 
-        onClick={()=> {setActive(8); logoutHandler()}}
-      >
-        <AiOutlineLogout 
-          size={25}
-          color={active === 8 ? "red" : ''}
-        />
-        <span
-          className={`${active === 8 ? "text-[red]" : "text-blue"} pl-3 hidden sm:inline`}
-        >
-          Log out
-        </span>
-      </div>
-    </div>
-  )
-}
+    axios.get(`${server}/user/logout-user`, { withCredentials: true })
+      .then((res) => {
+        toast.success(res.data.message);
+        navigate('/login');
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error(err.response?.data?.message || err.message);
+      });
+  };
 
-export default ProfileSideBar
+  const menuItems = [
+    { id: 1, label: "Profile", icon: RxPerson },
+    { id: 2, label: "Orders", icon: HiOutlineShoppingBag },
+    { id: 3, label: "Refunds", icon: HiOutlineReceiptRefund },
+    { id: 4, label: "Inbox", icon: AiOutlineMessage, action: () => navigate('/inbox') },
+    { id: 5, label: "Track Order", icon: MdOutlineTrackChanges },
+    { id: 6, label: "Payment Methods", icon: AiOutlineCreditCard },
+    { id: 7, label: "Addresses", icon: TbAddressBook },
+    { id: 8, label: "Log out", icon: AiOutlineLogout, action: logoutHandler, isLogout: true },
+  ];
+
+  return (
+    <div className='w-full bg-white shadow-sm rounded-lg p-2 sm:p-4 flex flex-col gap-1 border border-gray-100'>
+      {menuItems.map((item) => {
+        const IconComponent = item.icon;
+        const isActive = active === item.id;
+        
+        return (
+          <div
+            key={item.id}
+            onClick={() => {
+              setActive(item.id);
+              if (item.action) item.action();
+            }}
+            className={`flex items-center justify-center sm:justify-start cursor-pointer w-full p-3 rounded-md transition-all duration-200 ${
+              isActive 
+                ? "bg-red-50 text-red-600 font-medium" 
+                : item.isLogout 
+                  ? "text-gray-500 hover:bg-red-50 hover:text-red-600" 
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            }`}
+          >
+            <IconComponent size={22} className={isActive ? "text-red-600" : "text-inherit"} />
+            <span className="pl-3 hidden sm:inline text-sm tracking-wide">
+              {item.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default ProfileSideBar;

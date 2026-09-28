@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteShopProduct, getShopAllProducts } from '../../redux/actions/productAction';
 import { Link } from 'react-router-dom';
 import { AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
@@ -9,19 +9,22 @@ import { clearDeleteState } from '../../redux/slices/productSlice';
 
 const AllProducts = () => {
     const dispatch = useDispatch();
-    const { isLoading, products, getProductsSuccess, deleteLoading, deleteProSuccess, deleteError } = useSelector(state => state.product);
+    const { isLoading, products, deleteProSuccess, deleteError } = useSelector(state => state.product);
     const { seller } = useSelector(state => state.seller);
+
     //============================ useEffects =========================
     useEffect(() => {
-        if (seller && seller._id) {
+        if (seller?._id) {
             dispatch(getShopAllProducts(seller._id));
         }
-    }, [seller]);
+    }, [seller, dispatch]);
 
     useEffect(() => {
         if (deleteProSuccess) {
             toast.success("Product deleted successfully");
-            dispatch(getShopAllProducts(seller._id));
+            if (seller?._id) {
+                dispatch(getShopAllProducts(seller._id));
+            }
             dispatch(clearDeleteState());
         }
 
@@ -29,8 +32,7 @@ const AllProducts = () => {
             toast.error(deleteError);
             dispatch(clearDeleteState());
         }
-    }, [deleteProSuccess, deleteError, dispatch]);
-
+    }, [deleteProSuccess, deleteError, seller?._id, dispatch]);
 
     //============================ Handlers ==========================
     const handleDelete = (id) => {
@@ -42,21 +44,18 @@ const AllProducts = () => {
     //==================== Column and row setup =================
     const columns = [
         { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
-
         {
             field: "name",
             headerName: "Name",
             minWidth: 120,
             flex: 1.4,
         },
-
         {
             field: "price",
             headerName: "Price",
             minWidth: 100,
             flex: 0.6,
         },
-
         {
             field: "stock",
             headerName: "Stock",
@@ -64,7 +63,6 @@ const AllProducts = () => {
             minWidth: 80,
             flex: 0.5,
         },
-
         {
             field: "sold",
             headerName: "Sold",
@@ -72,8 +70,7 @@ const AllProducts = () => {
             minWidth: 100,
             flex: 0.6,
         },
-
-        // 👁 Preview
+        // 👁 Preview Row Button
         {
             field: "preview",
             headerName: "Preview",
@@ -82,18 +79,16 @@ const AllProducts = () => {
             flex: 0.6,
             renderCell: (params) => {
                 const product_name = params.row.name.replace(/\s+/g, "-");
-
                 return (
                     <Link to={`/product/${product_name}`}>
-                        <button className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition duration-300">
+                        <button className="p-2 rounded-lg bg-teal-50 text-teal-600 hover:bg-teal-600 hover:text-white transition-all duration-200 active:scale-95 outline-none">
                             <AiOutlineEye size={18} />
                         </button>
                     </Link>
                 );
             },
         },
-
-        // 🗑 Delete
+        // 🗑 Delete Action Trigger
         {
             field: "delete",
             headerName: "Delete",
@@ -104,7 +99,7 @@ const AllProducts = () => {
                 return (
                     <button
                         onClick={() => handleDelete(params.row.id)}
-                        className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition duration-300"
+                        className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-200 active:scale-95 outline-none"
                     >
                         <AiOutlineDelete size={18} />
                     </button>
@@ -123,69 +118,64 @@ const AllProducts = () => {
 
     //==================== return statements ===================
     return (
-        <>
-            {
-                isLoading ? (
-                    <div>
-                        Loading...
-                    </div>
-                ) : (
-                    <div className="w-full mx-4 sm:mx-8 mt-3 bg-white p-6 rounded-2xl shadow-md h-[75vh] overflow-y-scroll">
-                        <DataGrid
-                            rows={row}
-                            columns={columns}
-                            pageSize={10}
-                            disableRowSelectionOnClick
-                            autoHeight
-                            sx={{
-                                border: "none",
+        <div className="w-full mx-4 sm:mx-8 mt-4">
+            {isLoading ? (
+                <div className="w-full bg-white p-6 rounded-2xl shadow-xs border border-gray-100 h-[70vh] flex flex-col items-center justify-center gap-3">
+                    <div className="w-10 h-10 border-4 border-teal-500/20 border-t-teal-500 rounded-full animate-spin" />
+                    <p className="text-sm font-semibold text-gray-400">Loading catalog inventory data matrix...</p>
+                </div>
+            ) : (
+                <div className="bg-white p-6 rounded-2xl shadow-xs border border-gray-100 h-[75vh] overflow-y-auto no-scrollbar">
+                    <DataGrid
+                        rows={row}
+                        columns={columns}
+                        pageSize={10}
+                        disableRowSelectionOnClick
+                        autoHeight
+                        sx={{
+                            border: "none",
+                            "& .MuiDataGrid-cell": {
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: "14px",
+                                color: "#374151",
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: "#f0fdfa", // Light teal theme bg
+                                fontSize: "14px",
+                                fontWeight: "700",
+                                color: "#0f766e", // Deep modern teal text color 
+                                borderBottom: "2px solid #ccfbf1",
+                            },
+                            "& .MuiDataGrid-columnHeaderTitle": {
+                                fontWeight: "700",
+                            },
+                            "& .MuiDataGrid-row": {
+                                borderBottom: "1px solid #f3f4f6",
+                                transition: "background-color 0.2s ease",
+                            },
+                            "& .MuiDataGrid-row:hover": {
+                                backgroundColor: "#f9fafb",
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                                borderTop: "1px solid #e5e7eb",
+                                backgroundColor: "#ffffff",
+                            },
+                            "& .MuiDataGrid-columnSeparator": {
+                                display: "none",
+                            },
+                            "& .MuiDataGrid-cell:focus": {
+                                outline: "none",
+                            },
+                            "& .MuiDataGrid-columnHeader:focus": {
+                                outline: "none",
+                            },
+                        }}
+                    />
+                </div>
+            )}
+        </div>
+    );
+};
 
-                                "& .MuiDataGrid-cell": {
-                                    display: "flex",
-                                    alignItems: "center",
-                                    fontSize: "14px",
-                                    color: "#374151",
-                                },
-
-                                "& .MuiDataGrid-columnHeaders": {
-                                    backgroundColor: "#f9fafb",
-                                    fontSize: "15px",
-                                    fontWeight: "600",
-                                    color: "#111827",
-                                    borderBottom: "1px solid #e5e7eb",
-                                },
-
-                                "& .MuiDataGrid-row": {
-                                    borderBottom: "1px solid #f1f1f1",
-                                },
-
-                                "& .MuiDataGrid-row:hover": {
-                                    backgroundColor: "#f3f4f6",
-                                },
-
-                                "& .MuiDataGrid-footerContainer": {
-                                    borderTop: "1px solid #e5e7eb",
-                                    backgroundColor: "#fafafa",
-                                },
-
-                                "& .MuiDataGrid-columnSeparator": {
-                                    display: "none",
-                                },
-
-                                "& .MuiDataGrid-cell:focus": {
-                                    outline: "none",
-                                },
-
-                                "& .MuiDataGrid-columnHeader:focus": {
-                                    outline: "none",
-                                },
-                            }}
-                        />
-                    </div>
-                )
-            }
-        </>
-    )
-}
-
-export default AllProducts
+export default AllProducts;

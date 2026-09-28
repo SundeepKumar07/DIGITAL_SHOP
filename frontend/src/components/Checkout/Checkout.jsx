@@ -64,7 +64,7 @@ const Checkout = () => {
         city: formData.city,
         zipCode: formData.zipCode,
       },
-      cartItems,
+      cart: cartItems,
       pricing: {
         subtotal: totalPrice,
         shipping,
